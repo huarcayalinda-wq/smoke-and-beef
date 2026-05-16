@@ -676,10 +676,11 @@
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                       trigger: "#video-container",
                         start: "top top",
                         end: "bottom bottom",
-                        scrub: 0.5
+                        scrub: 1,
+                        invalidateOnRefresh: true
                     }
                 });
 
