@@ -3,75 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smoke & Beef | Estilo a la Parrilla</title>
+    <title>Smoke & Beef | El Mejor Sabor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+
+    <style>
+        /* Lenis Integration */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* Loader */
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: var(--font-heading); font-size: 2rem; gap: 1rem; color: white;
+        }
+        .progress-bar { width: 200px; height: 2px; background: #333; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: var(--primary); transition: width 0.1s; }
+
+        /* Scroll Canvas Container */
+        .video-scroll-container {
+            position: relative;
+        }
+
+        .canvas-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #000;
+            z-index: 0;
+        }
+
+        #hero-canvas {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            opacity: 0.85; /* Increased opacity for more premium look */
+        }
+        
+        .hero-impact-wrapper {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+        }
+        
+        .hero-impact-title {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-family: var(--font-heading);
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            margin-bottom: 20px;
+        }
+
+        .hero-impact-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        }
+
+        .btn-premium-hero {
+            padding: 18px 50px;
+            background: var(--primary);
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+        }
+
+        .btn-premium-hero:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(249, 115, 22, 0.4);
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .stat-number {
+            font-size: 4.5rem;
+            font-family: var(--font-heading);
+            color: var(--primary);
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Elevate Content over fixed Canvas */
+        #filter-wrapper, main, footer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navbar always fixed at top */
+        #navbar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* Stats overlay inside canvas */
+        .stats-overlay {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            z-index: 15;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            background: rgba(0,0,0,0.75);
+            padding: 40px 50px;
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        /* Dark Theme & Glassmorphism Overrides */
+        body { background: #000 !important; color: #fff !important; text-align: left; }
+        .hero, .footer-bottom, .breakdown-container { text-align: left !important; }
+        
+        .section-light, .section-gray, .section-dark {
+            background-color: transparent !important;
+            border: none !important;
+        }
+
+        .card, .card-dark, .card-horizontal {
+            background: rgba(0, 0, 0, 0.75) !important;
+            backdrop-filter: blur(12px);
+            border-color: rgba(255,255,255,0.1) !important;
+            color: white !important;
+        }
+
+        .section-title, .card-title, .card-desc, .text-dark, .card-title-small, .price-small, .old-price {
+            color: white !important;
+        }
+        
+        .price, .new-price { color: var(--primary) !important; }
+
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.85) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar .nav-links a { color: white !important; }
+        
+        /* Footer transparency */
+        footer.footer {
+            background: rgba(0,0,0,0.8) !important;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Kill all white backgrounds from original styles.css */
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.85) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+        }
+        .navbar.scrolled .logo { color: var(--primary) !important; }
+        .navbar.scrolled .nav-links a { color: white !important; }
+
+        .video-scroll-container,
+        .hero-impact-wrapper {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+        }
+
+        .section { padding: 80px 0; }
+        .section-title { margin-bottom: 40px; }
+        
+        /* Persistent CTA in bottom right if needed */
+        .persistent-cta {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .persistent-cta.visible { opacity: 1; pointer-events: auto; }
+
+        /* Scroll Animations */
+        .gsap-fade-up, .gsap-slide-left, .gsap-slide-right, .gsap-scale-up {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+    </style>
 </head>
 <body>
 
-    <!-- Navbar Fijo -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="#" class="logo">
-                <span class="logo-icon">🍔</span> SMOKE & BEEF
-            </a>
-            
-            <div class="nav-links">
-                <a href="#promos">Promos</a>
-                <a href="#combos">Combos</a>
-                <a href="#hamburguesas">Hamburguesas</a>
-                <a href="#extras">Extras</a>
-                <a href="#bebidas">Bebidas</a>
+    <div id="loader">
+        <div class="loader-text">Cargando experiencia... 0%</div>
+        <div class="progress-bar"><div class="progress-fill" id="loader-fill"></div></div>
+    </div>
+
+    <!-- Navbar Fijo (PRIMER ELEMENTO VISIBLE) -->
+    <nav class="navbar" id="navbar" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="container nav-container" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+            <div style="justify-self: start;">
+                <a href="#" class="logo" style="color: var(--primary);">🍔 SMOKE & BEEF</a>
             </div>
-            
-            <a href="https://wa.me/51987654321?text=Hola!%20Quiero%20hacer%20un%20pedido%20en%20Smoke%20%26%20Beef%20🍔" target="_blank" class="btn btn-primary nav-cta">Hacer pedido</a>
+            <div class="nav-links" style="display: flex; gap: 24px; justify-content: center;">
+                <a href="#promos" style="color: white; text-decoration: none; font-weight: 600;">Promos</a>
+                <a href="#combos" style="color: white; text-decoration: none; font-weight: 600;">Combos</a>
+                <a href="#hamburguesas" style="color: white; text-decoration: none; font-weight: 600;">Hamburguesas</a>
+                <a href="#extras" style="color: white; text-decoration: none; font-weight: 600;">Extras</a>
+                <a href="#bebidas" style="color: white; text-decoration: none; font-weight: 600;">Bebidas</a>
+            </div>
+            <div style="justify-self: end;">
+                <a href="https://wa.me/51987654321" target="_blank" class="btn btn-primary" style="color: white; margin: 0;">Hacer pedido</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Banner -->
-    <header class="hero">
-        <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <div class="hero-badge">
-                <span class="live-dot"></span> Abierto hoy · 12pm–11pm
-            </div>
-            <h1 class="hero-title">LO MEJOR ESTÁ EN LA PARRILLA</h1>
-            <p class="hero-subtitle">Descubre el verdadero sabor de nuestras hamburguesas al humo.</p>
-            <a href="#hamburguesas" class="btn btn-large btn-primary">Ver Menú</a>
+    <!-- Canvas Section -->
+    <div class="video-scroll-container" id="video-container">
+        <div class="canvas-wrapper">
+            <canvas id="hero-canvas"></canvas>
+            <div class="video-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); pointer-events: none;"></div>
         </div>
-    </header>
+        
+        <div class="hero-impact-wrapper">
+            <h1 class="hero-impact-title gsap-reveal">SMOKE & BEEF</h1>
+            <p class="hero-impact-subtitle gsap-reveal">El auténtico sabor a la parrilla</p>
+            <div class="gsap-reveal">
+                <button class="btn-premium-hero" onclick="document.getElementById('filter-wrapper').scrollIntoView({behavior: 'smooth'})">Ver Menú</button>
+            </div>
 
-    <!-- Filtros Horizontales Sticky -->
-    <div class="filter-wrapper" id="filter-wrapper">
-        <div class="container">
-            <div class="filter-scroll">
-                <button class="filter-pill active" data-target="promos">Promos</button>
-                <button class="filter-pill" data-target="hamburguesas">Hamburguesas</button>
-                <button class="filter-pill" data-target="combos">Combos</button>
-                <button class="filter-pill" data-target="extras">Extras</button>
-                <button class="filter-pill" data-target="bebidas">Bebidas</button>
+            <!-- Stats Overlay -->
+            <div class="stats-overlay">
+                <div>
+                    <h3 class="stat-number" data-target="1500" data-suffix="+">0</h3>
+                    <p style="font-size: 1.1rem; color: #ccc; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Burgers Servidas</p>
+                </div>
+                <div>
+                    <h3 class="stat-number" data-target="100" data-suffix="%">0</h3>
+                    <p style="font-size: 1.1rem; color: #ccc; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Carne Angus</p>
+                </div>
+                <div>
+                    <h3 class="stat-number" data-target="24" data-suffix="h">0</h3>
+                    <p style="font-size: 1.1rem; color: #ccc; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Macerado Intenso</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Menú Sections -->
+
     <main>
-        
-        <!-- SECCIÓN PROMOS (Fondo Oscuro) -->
-        <section id="promos" class="section section-dark fade-section">
+        <!-- SECCIÓN PROMOS -->
+        <section id="promos" class="section section-dark gsap-slide-left">
             <div class="container">
-                <h2 class="section-title text-white">Promos Exclusivas 💥</h2>
-                
+                <h2 class="section-title">Promos Exclusivas 💥</h2>
                 <div class="grid grid-promos">
-                    <!-- Promo 1 -->
                     <a href="detalle.html?p=antojito" class="card card-dark" style="text-decoration: none;">
                         <div class="badge-discount pulse-badge">-44%</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Antojito Personal"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Antojito"></div>
                         <div class="card-body">
                             <h3 class="card-title">Antojito Personal</h3>
-                            <p class="card-desc">1 Burger Clásica + Papas Chicas + Bebida personal.</p>
+                            <p class="card-desc">1 Burger Clásica + Papas Chicas + Bebida</p>
                             <div class="card-footer">
                                 <div class="price-container">
                                     <span class="old-price">S/ 35.00</span>
@@ -81,14 +306,12 @@
                             </div>
                         </div>
                     </a>
-
-                    <!-- Promo 2 -->
                     <a href="detalle.html?p=duo" class="card card-dark" style="text-decoration: none;">
                         <div class="badge-discount pulse-badge">-39%</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1586816001966-79b736744398?w=400&h=300&fit=crop" alt="Dúo Clásico"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1586816001966-79b736744398?w=400&h=300&fit=crop" alt="Duo Clásico"></div>
                         <div class="card-body">
                             <h3 class="card-title">Dúo Clásico</h3>
-                            <p class="card-desc">2 Burgers Clásicas + Papas Medianas + 2 Bebidas.</p>
+                            <p class="card-desc">2 Burgers Clásicas + Papas Medianas + 2 Bebidas</p>
                             <div class="card-footer">
                                 <div class="price-container">
                                     <span class="old-price">S/ 46.00</span>
@@ -98,14 +321,12 @@
                             </div>
                         </div>
                     </a>
-
-                    <!-- Promo 3 -->
                     <a href="detalle.html?p=familiar" class="card card-dark" style="text-decoration: none;">
                         <div class="badge-discount pulse-badge">-48%</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&h=300&fit=crop" alt="Combo Familiar"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=400&h=300&fit=crop" alt="Combo Familiar"></div>
                         <div class="card-body">
                             <h3 class="card-title">Combo Familiar</h3>
-                            <p class="card-desc">4 Burgers + 2 Papas Familiares + Gaseosa 1.5L.</p>
+                            <p class="card-desc">4 Burgers + 2 Papas Familiares + Gaseosa 1.5L</p>
                             <div class="card-footer">
                                 <div class="price-container">
                                     <span class="old-price">S/ 93.00</span>
@@ -115,14 +336,12 @@
                             </div>
                         </div>
                     </a>
-
-                    <!-- Promo 4 -->
                     <a href="detalle.html?p=trio" class="card card-dark" style="text-decoration: none;">
                         <div class="badge-discount pulse-badge">-50%</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=400&h=300&fit=crop" alt="Trío Amigos"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?w=400&h=300&fit=crop" alt="Trío Amigos"></div>
                         <div class="card-body">
                             <h3 class="card-title">Trío Amigos</h3>
-                            <p class="card-desc">3 Burgers + Papas Grandes + 3 Bebidas.</p>
+                            <p class="card-desc">3 Burgers + Papas Grandes + 3 Bebidas</p>
                             <div class="card-footer">
                                 <div class="price-container">
                                     <span class="old-price">S/ 88.00</span>
@@ -136,15 +355,14 @@
             </div>
         </section>
 
-        <!-- SECCIÓN HAMBURGUESAS (Fondo Claro) -->
-        <section id="hamburguesas" class="section section-light fade-section">
+        <!-- SECCIÓN HAMBURGUESAS -->
+        <section id="hamburguesas" class="section section-light gsap-fade-up">
             <div class="container">
                 <h2 class="section-title">Hamburguesas 🍔</h2>
-                
                 <div class="grid">
-                    <a href="detalle.html?p=clasica" class="card" style="text-decoration: none; color: inherit;">
+                    <a href="detalle.html?p=clasica" class="card" style="text-decoration: none;">
                         <div class="badge tag-popular">Popular</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Clásica Smoke"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&h=300&fit=crop" alt="Clásica Smoke"></div>
                         <div class="card-body">
                             <h3 class="card-title">Clásica Smoke</h3>
                             <p class="card-desc">Carne 180g, lechuga, tomate, cebolla, pepinillo, salsa secreta.</p>
@@ -154,10 +372,9 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="detalle.html?p=doble" class="card" style="text-decoration: none; color: inherit;">
+                    <a href="detalle.html?p=doble" class="card" style="text-decoration: none;">
                         <div class="badge tag-favorita">Favorita</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=400&h=300&fit=crop" alt="Doble Queso"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=300&fit=crop" alt="Doble Queso"></div>
                         <div class="card-body">
                             <h3 class="card-title">Doble Queso</h3>
                             <p class="card-desc">Doble carne 360g, doble queso fundido, cebolla caramelizada, bacon.</p>
@@ -167,10 +384,9 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="detalle.html?p=infernal" class="card" style="text-decoration: none; color: inherit;">
+                    <a href="detalle.html?p=infernal" class="card" style="text-decoration: none;">
                         <div class="badge tag-picante">Picante</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1615297928064-24977384d0da?w=400&h=300&fit=crop" alt="La Infernal"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1582196016295-f8c8bd4b3a99?w=400&h=300&fit=crop" alt="La Infernal"></div>
                         <div class="card-body">
                             <h3 class="card-title">La Infernal</h3>
                             <p class="card-desc">Carne 200g, jalapeños frescos, queso pepper jack, salsa picante.</p>
@@ -180,10 +396,9 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="detalle.html?p=avocado" class="card" style="text-decoration: none; color: inherit;">
-                        <div class="badge tag-nueva">Nuevo</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1548940740-204726a19be3?w=400&h=300&fit=crop" alt="Avocado Gold"></div>
+                    <a href="detalle.html?p=avocado" class="card" style="text-decoration: none;">
+                        <div class="badge tag-nueva">Nueva</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop" alt="Avocado Gold"></div>
                         <div class="card-body">
                             <h3 class="card-title">Avocado Gold</h3>
                             <p class="card-desc">Carne 180g, palta fresca, queso suizo, tomate cherry, mayonesa de ajo.</p>
@@ -193,9 +408,8 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="detalle.html?p=mushroom" class="card" style="text-decoration: none; color: inherit;">
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=300&fit=crop" alt="Mushroom Melt"></div>
+                    <a href="detalle.html?p=mushroom" class="card" style="text-decoration: none;">
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" alt="Mushroom Melt"></div>
                         <div class="card-body">
                             <h3 class="card-title">Mushroom Melt</h3>
                             <p class="card-desc">Carne 180g, champiñones, queso brie, cebolla morada, rúcula.</p>
@@ -205,8 +419,7 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="detalle.html?p=veggie" class="card" style="text-decoration: none; color: inherit;">
+                    <a href="detalle.html?p=veggie" class="card" style="text-decoration: none;">
                         <div class="badge tag-veggie">Veggie</div>
                         <div class="card-img"><img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=300&fit=crop" alt="Veggie Power"></div>
                         <div class="card-body">
@@ -223,41 +436,37 @@
         </section>
 
         <!-- SECCIÓN COMBOS -->
-        <section id="combos" class="section section-gray fade-section">
+        <section id="combos" class="section section-gray gsap-scale-up">
             <div class="container">
                 <h2 class="section-title">Combos 🍟</h2>
-                
                 <div class="grid grid-3">
                     <div class="card">
                         <div class="card-img"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&h=300&fit=crop" alt="Combo Clásico"></div>
                         <div class="card-body">
                             <h3 class="card-title">Combo Clásico</h3>
-                            <p class="card-desc">Clásica Smoke + Papas Medianas + Bebida Regular.</p>
+                            <p class="card-desc">Clásica Smoke + Papas Medianas + Bebida Regular</p>
                             <div class="card-footer">
                                 <span class="price">S/ 24.80</span>
                                 <button class="btn btn-add">Agregar</button>
                             </div>
                         </div>
                     </div>
-
-                    <div class="card highlight">
-                        <div class="badge tag-popular">Recomendado</div>
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" alt="Combo Doble Extremo"></div>
+                    <div class="card">
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1561758033-7e924f619b47?w=400&h=300&fit=crop" alt="Combo Doble Extremo"></div>
                         <div class="card-body">
                             <h3 class="card-title">Combo Doble Extremo</h3>
-                            <p class="card-desc">Burger Doble Queso + Papas Grandes + Bebida Grande.</p>
+                            <p class="card-desc">Burger Doble Queso + Papas Grandes + Bebida Grande</p>
                             <div class="card-footer">
                                 <span class="price">S/ 32.80</span>
-                                <button class="btn btn-primary btn-add">Agregar</button>
+                                <button class="btn btn-add">Agregar</button>
                             </div>
                         </div>
                     </div>
-
                     <div class="card">
-                        <div class="card-img"><img src="https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop" alt="Combo Avocado"></div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=400&h=300&fit=crop" alt="Combo Avocado"></div>
                         <div class="card-body">
                             <h3 class="card-title">Combo Avocado</h3>
-                            <p class="card-desc">Avocado Gold + Aros de cebolla + Bebida Regular.</p>
+                            <p class="card-desc">Avocado Gold + Aros de cebolla + Bebida Regular</p>
                             <div class="card-footer">
                                 <span class="price">S/ 29.80</span>
                                 <button class="btn btn-add">Agregar</button>
@@ -269,70 +478,67 @@
         </section>
 
         <!-- SECCIÓN EXTRAS -->
-        <section id="extras" class="section section-light fade-section">
+        <section id="extras" class="section section-light gsap-slide-right">
             <div class="container">
                 <h2 class="section-title">Extras 🥓</h2>
                 <div class="grid">
-                    <a href="detalle.html?p=papas" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                    <div class="card card-horizontal">
                         <div class="card-img-small"><img src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=300&fit=crop" alt="Papas Fritas"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Papas Fritas</h4>
                             <span class="price-small">S/ 6.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
-
-                    <a href="detalle.html?p=nuggets" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <button class="btn-icon">+</button>
+                    </div>
+                    <div class="card card-horizontal">
                         <div class="card-img-small"><img src="https://images.unsplash.com/photo-1562802378-063ec186a863?w=400&h=300&fit=crop" alt="Nuggets"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Nuggets (6 und)</h4>
                             <span class="price-small">S/ 12.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
-
-                    <a href="detalle.html?p=aros" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <button class="btn-icon">+</button>
+                    </div>
+                    <div class="card card-horizontal">
                         <div class="card-img-small"><img src="https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&h=300&fit=crop" alt="Aros de Cebolla"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Aros de Cebolla</h4>
                             <span class="price-small">S/ 10.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
-
-                    <a href="detalle.html?p=sundae" class="card card-horizontal" style="text-decoration: none; color: inherit;">
-                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop" alt="Sundae Chocolate"></div>
+                        <button class="btn-icon">+</button>
+                    </div>
+                    <div class="card card-horizontal">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1580915411954-282cb1b0d780?w=400&h=300&fit=crop" alt="Sundae Chocolate"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Sundae Chocolate</h4>
                             <span class="price-small">S/ 7.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
+                        <button class="btn-icon">+</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- SECCIÓN BEBIDAS -->
-        <section id="bebidas" class="section section-gray fade-section">
+        <section id="bebidas" class="section section-gray gsap-slide-left">
             <div class="container">
                 <h2 class="section-title">Bebidas 🥤</h2>
                 <div class="grid">
-                    <a href="detalle.html?p=gaseosa" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                    <div class="card card-horizontal">
                         <div class="card-img-small"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=300&fit=crop" alt="Gaseosa Regular"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Gaseosa Regular</h4>
                             <span class="price-small">S/ 5.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
-                    <a href="detalle.html?p=agua" class="card card-horizontal" style="text-decoration: none; color: inherit;">
-                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&h=300&fit=crop" alt="Agua Mineral"></div>
+                        <button class="btn-icon">+</button>
+                    </div>
+                    <div class="card card-horizontal">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1559839914-17aae19cec71?w=400&h=300&fit=crop" alt="Agua Mineral"></div>
                         <div class="card-info">
                             <h4 class="card-title-small">Agua Mineral</h4>
                             <span class="price-small">S/ 4.90</span>
                         </div>
-                        <span class="btn-icon">+</span>
-                    </a>
+                        <button class="btn-icon">+</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -351,13 +557,11 @@
                     <a href="#">TK</a>
                 </div>
             </div>
-            
             <div class="footer-col">
                 <h3>Ubícanos</h3>
                 <p>📍 Av. La Mar 456, Miraflores<br>Lima, Perú</p>
                 <p>📞 987-654-321</p>
             </div>
-            
             <div class="footer-col">
                 <h3>Métodos de Pago</h3>
                 <div class="payment-methods">
@@ -379,83 +583,192 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // 1. Navbar Solid on Scroll
-            const navbar = document.getElementById('navbar');
-            const filterWrapper = document.getElementById('filter-wrapper');
-            const navHeight = navbar.offsetHeight;
+            // Lenis Setup
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true
+            });
 
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0, 0);
+
+            // Sticky Navbar
+            const navbar = document.getElementById('navbar');
+            const navHeight = navbar.offsetHeight;
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
                     navbar.classList.add('scrolled');
                 } else {
                     navbar.classList.remove('scrolled');
                 }
-
-                // Sticky filters logic
-                if (window.scrollY > document.querySelector('.hero').offsetHeight - 50) {
-                    filterWrapper.classList.add('sticky');
-                } else {
-                    filterWrapper.classList.remove('sticky');
-                }
             });
 
-            // 2. Filter Pills Smooth Scroll & Active State
-            const pills = document.querySelectorAll('.filter-pill');
-            const sections = document.querySelectorAll('.section');
-
-            pills.forEach(pill => {
-                pill.addEventListener('click', (e) => {
-                    const targetId = pill.getAttribute('data-target');
+            // Smooth Scroll for Navbar links
+            document.querySelectorAll('#navbar a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
+                    if(targetSection) {
+                        const y = targetSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 10;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // --- CANVAS EXPERIENCE ---
+            const canvas = document.getElementById('hero-canvas');
+            const context = canvas.getContext('2d');
+            const frameCount = 160; 
+            const images = [];
+            let loadedCount = 0;
+
+            for (let i = 1; i <= frameCount; i++) {
+                const img = new Image();
+                const frameNum = i.toString().padStart(4, '0');
+                img.src = `frames/frame_${frameNum}.webp`;
+                img.onload = () => {
+                    loadedCount++;
+                    const percent = Math.round((loadedCount / frameCount) * 100);
+                    document.querySelector('.loader-text').innerText = `Cargando experiencia... ${percent}%`;
+                    document.getElementById('loader-fill').style.width = `${percent}%`;
+                    if (loadedCount === frameCount) {
+                        gsap.to('#loader', {
+                            opacity: 0,
+                            duration: 0.5,
+                            onComplete: () => {
+                                document.getElementById('loader').style.display = 'none';
+                                render(0);
+                                initGSAP();
+                            }
+                        });
+                    }
+                };
+                images.push(img);
+            }
+
+            function render(index) {
+                if (images[index]) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    const img = images[index];
                     
-                    // Calcular offset para evitar que el navbar tape el título
-                    const offsetTop = targetSection.offsetTop - filterWrapper.offsetHeight - navHeight;
+                    const hRatio = canvas.width / img.width;
+                    const vRatio = canvas.height / img.height;
+                    const ratio  = Math.max(hRatio, vRatio);
+                    const centerShift_x = (canvas.width - img.width*ratio) / 2;
+                    const centerShift_y = (canvas.height - img.height*ratio) / 2;  
                     
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
+                    context.clearRect(0,0,canvas.width, canvas.height);
+                    context.drawImage(img, 0,0, img.width, img.height,
+                                       centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
+                }
+            }
+
+            window.addEventListener("resize", () => render(0));
+
+            function initGSAP() {
+                // Scroll Canvas Timeline linked to ENTIRE PAGE
+                const obj = { frame: 0 };
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: document.documentElement,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 0.5
+                    }
+                });
+
+                tl.to(obj, {
+                    frame: frameCount - 1,
+                    snap: "frame",
+                    ease: "none",
+                    onUpdate: () => render(obj.frame)
+                }, 0);
+
+                // Intro GSAP
+                gsap.utils.toArray('.gsap-reveal').forEach((el, i) => {
+                    gsap.fromTo(el, 
+                        { autoAlpha: 0, y: 50 },
+                        {
+                            autoAlpha: 1, 
+                            y: 0,
+                            duration: 1.2,
+                            delay: i * 0.2,
+                            ease: "power3.out",
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 90%"
+                            }
+                        }
+                    );
+                });
+
+                // Stats Counters
+                const counters = document.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const suffix = counter.getAttribute('data-suffix');
+                    gsap.to(counter, {
+                        innerHTML: target,
+                        duration: 2.5,
+                        ease: "power2.out",
+                        snap: { innerHTML: 1 },
+                        scrollTrigger: {
+                            trigger: counter,
+                            start: "top 85%"
+                        },
+                        onUpdate: function() {
+                            counter.innerHTML = Math.round(this.targets()[0].innerHTML) + suffix;
+                        }
                     });
                 });
-            });
 
-            // Update Active Pill on Scroll
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    // Offset para que cambie un poco antes de llegar a la sección
-                    if (scrollY >= (sectionTop - filterWrapper.offsetHeight - navHeight - 100)) {
-                        current = section.getAttribute('id');
-                    }
+                // Section Grid Animations
+                const sectionsToAnimate = [
+                    { sel: '.gsap-slide-left', x: -100, y: 0, scale: 1 },
+                    { sel: '.gsap-slide-right', x: 100, y: 0, scale: 1 },
+                    { sel: '.gsap-fade-up', x: 0, y: 100, scale: 1 },
+                    { sel: '.gsap-scale-up', x: 0, y: 0, scale: 0.8 }
+                ];
+
+                sectionsToAnimate.forEach(anim => {
+                    gsap.utils.toArray(anim.sel).forEach(el => {
+                        gsap.set(el, { autoAlpha: 0, x: anim.x, y: anim.y, scale: anim.scale });
+                        gsap.to(el, {
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 85%",
+                            },
+                            autoAlpha: 1,
+                            x: 0,
+                            y: 0,
+                            scale: 1,
+                            duration: 1,
+                            ease: "power3.out"
+                        });
+                    });
                 });
-
-                pills.forEach(pill => {
-                    pill.classList.remove('active');
-                    if (pill.getAttribute('data-target') === current) {
-                        pill.classList.add('active');
-                    }
+                
+                // Parallax for cards
+                const parallaxImgs = document.querySelectorAll('.card-img img');
+                parallaxImgs.forEach(img => {
+                    gsap.to(img, {
+                        yPercent: 15,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: img.parentElement,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
                 });
-            });
-
-            // 3. Intersection Observer (Fade-in Animations)
-            const faders = document.querySelectorAll('.fade-section');
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const fadeObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            faders.forEach(fader => {
-                fadeObserver.observe(fader);
-            });
+            }
         });
     </script>
 </body>
