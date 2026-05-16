@@ -33,14 +33,15 @@
         /* Scroll Canvas Container */
         .video-scroll-container {
             position: relative;
+            height: 100vh;
         }
 
         .canvas-wrapper {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             background: #000;
             z-index: 0;
@@ -684,14 +685,16 @@
             window.addEventListener("resize", () => render(0));
 
             function initGSAP() {
-                // Scroll Canvas Timeline — cubre toda la página
+                // Scroll Canvas Timeline — solo en el hero (primera pantalla)
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                        trigger: "#video-container",
                         start: "top top",
-                        end: "bottom bottom",
+                        end: "+=200%",
                         scrub: 1,
+                        pin: true,
+                        anticipatePin: 1,
                         invalidateOnRefresh: true
                     }
                 });
