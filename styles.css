@@ -333,6 +333,8 @@ h1, h2, h3, h4, .logo, .hero-title {
     transform: scale(1.05); /* Slight zoom on hover */
 }
 
+.card-dark .card-img { background: #000; }
+
 /* Card Body */
 .card-body {
     padding: 24px;
