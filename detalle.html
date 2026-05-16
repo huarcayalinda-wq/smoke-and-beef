@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto | Smoke & Beef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: var(--bg-darker);
+            color: var(--text-light);
+        }
+        .navbar {
+            background: var(--bg-dark);
+            box-shadow: var(--shadow-md);
+        }
+        .navbar .logo {
+            color: var(--primary);
+        }
+        .navbar .nav-links a {
+            color: var(--text-light);
+        }
+        .navbar .nav-links a:hover {
+            color: var(--primary);
+        }
+        .detalle-section {
+            padding-top: 120px;
+            min-height: calc(100vh - 300px);
+        }
+        .detalle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .detalle-img-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+            background: #1f2937;
+        }
+        .detalle-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 4/3;
+        }
+        .btn-back {
+            color: var(--text-gray);
+            border: 1px solid var(--border-dark);
+            margin-bottom: 24px;
+            background: transparent;
+        }
+        .btn-back:hover {
+            background: var(--bg-dark);
+            color: white;
+        }
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--border-dark);
+            border-radius: 50px;
+            padding: 4px;
+            background: var(--bg-dark);
+        }
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .qty-btn:hover {
+            background: var(--border-dark);
+        }
+        .qty-number {
+            width: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .detalle-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Fijo -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🍔</span> SMOKE & BEEF
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html#promos">Promos</a>
+                <a href="index.html#combos">Combos</a>
+                <a href="index.html#hamburguesas">Hamburguesas</a>
+                <a href="index.html#extras">Extras</a>
+                <a href="index.html#bebidas">Bebidas</a>
+            </div>
+            
+            <a href="https://wa.me/51987654321?text=Hola!%20Quiero%20hacer%20un%20pedido%20en%20Smoke%20%26%20Beef%20🍔" target="_blank" class="btn btn-primary nav-cta">Hacer pedido</a>
+        </div>
+    </nav>
+
+    <main class="detalle-section">
+        <div class="container">
+            <a href="index.html" class="btn btn-back">← Volver al menú</a>
+            
+            <div class="detalle-grid">
+                <div class="detalle-img-container">
+                    <div id="product-badge" class="badge-discount pulse-badge" style="font-size: 1.5rem; padding: 12px 20px;">-0%</div>
+                    <img id="product-img" src="" alt="Producto">
+                </div>
+                
+                <div class="detalle-info">
+                    <h1 id="product-title" class="hero-title" style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 16px; text-transform: none; color: white;">Cargando...</h1>
+                    <p id="product-desc" style="font-size: 1.2rem; color: #9ca3af; margin-bottom: 32px; line-height: 1.6;">...</p>
+                    
+                    <div class="price-container" style="margin-bottom: 32px;">
+                        <span id="product-old-price" class="old-price" style="font-size: 1.2rem;">S/ 0.00</span>
+                        <span id="product-new-price" class="new-price" style="font-size: 3rem;">S/ 0.00</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <div class="qty-selector">
+                            <button id="btn-minus" class="qty-btn">&minus;</button>
+                            <span id="qty-number" class="qty-number">1</span>
+                            <button id="btn-plus" class="qty-btn">+</button>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-large" style="display: flex; align-items: center; gap: 12px; flex-grow: 1; justify-content: center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            Agregar al carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 80px;">
+        <div class="container footer-grid">
+            <div class="footer-col brand-col">
+                <h2 class="footer-logo">🍔 SMOKE & BEEF</h2>
+                <p>La mejor experiencia a la parrilla, directo a tu mesa.</p>
+                <div class="social-links">
+                    <a href="#">FB</a>
+                    <a href="#">IG</a>
+                    <a href="#">TK</a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Ubícanos</h3>
+                <p>📍 Av. La Mar 456, Miraflores<br>Lima, Perú</p>
+                <p>📞 987-654-321</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Métodos de Pago</h3>
+                <div class="payment-methods">
+                    <span class="pay-badge yape">Yape</span>
+                    <span class="pay-badge plin">Plin</span>
+                    <span class="pay-badge visa">Visa</span>
+                    <span class="pay-badge mc">Mastercard</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Smoke & Beef. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const products = {
+            'antojito': {
+                title: 'Antojito Personal',
+                img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
+                oldPrice: 'S/ 35.00',
+                newPrice: 'S/ 19.90',
+                discount: '-44%',
+                desc: '1 Burger Clásica + Papas Chicas + Bebida personal'
+            },
+            'duo': {
+                title: 'Dúo Clásico',
+                img: 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=800',
+                oldPrice: 'S/ 46.00',
+                newPrice: 'S/ 27.90',
+                discount: '-39%',
+                desc: '2 Burgers Clásicas + Papas Medianas + 2 Bebidas'
+            },
+            'familiar': {
+                title: 'Combo Familiar',
+                img: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800',
+                oldPrice: 'S/ 93.00',
+                newPrice: 'S/ 47.90',
+                discount: '-48%',
+                desc: '4 Burgers + 2 Papas Familiares + Gaseosa 1.5L'
+            },
+            'trio': {
+                title: 'Trío Amigos',
+                img: 'https://images.unsplash.com/photo-1551782450-17144efb9c50?w=800',
+                oldPrice: 'S/ 88.00',
+                newPrice: 'S/ 43.90',
+                discount: '-50%',
+                desc: '3 Burgers Clásicas + Papas Grandes + 3 Bebidas'
+            },
+            'clasica': {
+                title: 'Clásica Smoke',
+                img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
+                newPrice: 'S/ 17.90',
+                badge: 'POPULAR',
+                desc: 'Carne 180g, lechuga, tomate, cebolla, pepinillo, salsa secreta'
+            },
+            'doble': {
+                title: 'Doble Queso',
+                img: 'https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=800',
+                newPrice: 'S/ 22.90',
+                badge: 'FAVORITA',
+                desc: 'Doble carne 360g, doble queso fundido, cebolla caramelizada, bacon'
+            },
+            'infernal': {
+                title: 'La Infernal',
+                img: 'https://images.unsplash.com/photo-1615297928064-24977384d0da?w=800',
+                newPrice: 'S/ 21.90',
+                badge: 'PICANTE 🌶️',
+                desc: 'Carne 200g, jalapeños frescos, queso pepper jack, salsa picante'
+            },
+            'avocado': {
+                title: 'Avocado Gold',
+                img: 'https://images.unsplash.com/photo-1548940740-204726a19be3?w=800',
+                newPrice: 'S/ 21.90',
+                badge: 'NUEVO',
+                desc: 'Carne 180g, palta fresca, queso suizo, tomate cherry, mayonesa de ajo'
+            },
+            'mushroom': {
+                title: 'Mushroom Melt',
+                img: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800',
+                newPrice: 'S/ 20.90',
+                desc: 'Carne 180g, champiñones, queso brie, cebolla morada, rúcula'
+            },
+            'veggie': {
+                title: 'Veggie Power',
+                img: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?w=800',
+                newPrice: 'S/ 18.90',
+                badge: 'VEGGIE 🌱',
+                desc: 'Medallón de lentejas y quinua, queso feta, palta, espinaca'
+            },
+            'papas': {
+                title: 'Papas Fritas',
+                img: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=800',
+                newPrice: 'S/ 6.90',
+                desc: 'Papas fritas crujientes con sal, porción personal'
+            },
+            'nuggets': {
+                title: 'Nuggets (6 und)',
+                img: 'https://images.unsplash.com/photo-1562802378-063ec186a863?w=800',
+                newPrice: 'S/ 12.90',
+                desc: '6 nuggets de pollo crujientes con salsa a elegir'
+            },
+            'aros': {
+                title: 'Aros de Cebolla',
+                img: 'https://images.unsplash.com/photo-1639024471283-03518883512d?w=800',
+                newPrice: 'S/ 10.90',
+                desc: 'Aros de cebolla empanizados y fritos, crujientes por fuera'
+            },
+            'sundae': {
+                title: 'Sundae Chocolate',
+                img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800',
+                newPrice: 'S/ 7.90',
+                desc: 'Helado de vainilla con salsa de chocolate caliente'
+            },
+            'gaseosa': {
+                title: 'Gaseosa Regular',
+                img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800',
+                newPrice: 'S/ 5.90',
+                desc: 'Gaseosa fría 400ml a elegir entre Coca-Cola, Inca Kola o Sprite'
+            },
+            'agua': {
+                title: 'Agua Mineral',
+                img: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=800',
+                newPrice: 'S/ 4.90',
+                desc: 'Agua mineral sin gas 500ml, bien fría'
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const p = params.get('p');
+
+            if (p && products[p]) {
+                const product = products[p];
+                document.getElementById('product-title').textContent = product.title;
+                document.getElementById('product-img').src = product.img;
+                document.getElementById('product-img').alt = product.title;
+                
+                if (product.discount) {
+                    document.getElementById('product-badge').textContent = product.discount;
+                    document.getElementById('product-badge').style.display = 'block';
+                    document.getElementById('product-badge').className = 'badge-discount pulse-badge';
+                } else if (product.badge) {
+                    document.getElementById('product-badge').textContent = product.badge;
+                    document.getElementById('product-badge').style.display = 'block';
+                    document.getElementById('product-badge').className = 'badge-discount';
+                } else {
+                    document.getElementById('product-badge').style.display = 'none';
+                }
+
+                if (product.oldPrice) {
+                    document.getElementById('product-old-price').textContent = product.oldPrice;
+                    document.getElementById('product-old-price').style.display = 'inline';
+                } else {
+                    document.getElementById('product-old-price').style.display = 'none';
+                }
+
+                document.getElementById('product-new-price').textContent = product.newPrice;
+                document.getElementById('product-desc').textContent = product.desc;
+                document.title = product.title + " | Smoke & Beef";
+            } else {
+                document.getElementById('product-title').textContent = 'Producto no encontrado';
+                document.getElementById('product-desc').textContent = 'El producto que buscas no existe o no está disponible.';
+                document.getElementById('product-badge').style.display = 'none';
+                document.querySelector('.price-container').style.display = 'none';
+                document.querySelector('.qty-selector').parentElement.style.display = 'none';
+            }
+
+            // Quantity Logic
+            const btnMinus = document.getElementById('btn-minus');
+            const btnPlus = document.getElementById('btn-plus');
+            const qtyNumber = document.getElementById('qty-number');
+            
+            let qty = 1;
+
+            btnMinus.addEventListener('click', () => {
+                if (qty > 1) {
+                    qty--;
+                    qtyNumber.textContent = qty;
+                }
+            });
+
+            btnPlus.addEventListener('click', () => {
+                if (qty < 20) {
+                    qty++;
+                    qtyNumber.textContent = qty;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

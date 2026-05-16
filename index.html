@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smoke & Beef | Estilo a la Parrilla</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navbar Fijo -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">🍔</span> SMOKE & BEEF
+            </a>
+            
+            <div class="nav-links">
+                <a href="#promos">Promos</a>
+                <a href="#combos">Combos</a>
+                <a href="#hamburguesas">Hamburguesas</a>
+                <a href="#extras">Extras</a>
+                <a href="#bebidas">Bebidas</a>
+            </div>
+            
+            <a href="https://wa.me/51987654321?text=Hola!%20Quiero%20hacer%20un%20pedido%20en%20Smoke%20%26%20Beef%20🍔" target="_blank" class="btn btn-primary nav-cta">Hacer pedido</a>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="live-dot"></span> Abierto hoy · 12pm–11pm
+            </div>
+            <h1 class="hero-title">LO MEJOR ESTÁ EN LA PARRILLA</h1>
+            <p class="hero-subtitle">Descubre el verdadero sabor de nuestras hamburguesas al humo.</p>
+            <a href="#hamburguesas" class="btn btn-large btn-primary">Ver Menú</a>
+        </div>
+    </header>
+
+    <!-- Filtros Horizontales Sticky -->
+    <div class="filter-wrapper" id="filter-wrapper">
+        <div class="container">
+            <div class="filter-scroll">
+                <button class="filter-pill active" data-target="promos">Promos</button>
+                <button class="filter-pill" data-target="hamburguesas">Hamburguesas</button>
+                <button class="filter-pill" data-target="combos">Combos</button>
+                <button class="filter-pill" data-target="extras">Extras</button>
+                <button class="filter-pill" data-target="bebidas">Bebidas</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menú Sections -->
+    <main>
+        
+        <!-- SECCIÓN PROMOS (Fondo Oscuro) -->
+        <section id="promos" class="section section-dark fade-section">
+            <div class="container">
+                <h2 class="section-title text-white">Promos Exclusivas 💥</h2>
+                
+                <div class="grid grid-promos">
+                    <!-- Promo 1 -->
+                    <a href="detalle.html?p=antojito" class="card card-dark" style="text-decoration: none;">
+                        <div class="badge-discount pulse-badge">-44%</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Antojito Personal"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Antojito Personal</h3>
+                            <p class="card-desc">1 Burger Clásica + Papas Chicas + Bebida personal.</p>
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="old-price">S/ 35.00</span>
+                                    <span class="new-price">S/ 19.90</span>
+                                </div>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Promo 2 -->
+                    <a href="detalle.html?p=duo" class="card card-dark" style="text-decoration: none;">
+                        <div class="badge-discount pulse-badge">-39%</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1586816001966-79b736744398?w=400&h=300&fit=crop" alt="Dúo Clásico"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Dúo Clásico</h3>
+                            <p class="card-desc">2 Burgers Clásicas + Papas Medianas + 2 Bebidas.</p>
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="old-price">S/ 46.00</span>
+                                    <span class="new-price">S/ 27.90</span>
+                                </div>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Promo 3 -->
+                    <a href="detalle.html?p=familiar" class="card card-dark" style="text-decoration: none;">
+                        <div class="badge-discount pulse-badge">-48%</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&h=300&fit=crop" alt="Combo Familiar"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Combo Familiar</h3>
+                            <p class="card-desc">4 Burgers + 2 Papas Familiares + Gaseosa 1.5L.</p>
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="old-price">S/ 93.00</span>
+                                    <span class="new-price">S/ 47.90</span>
+                                </div>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Promo 4 -->
+                    <a href="detalle.html?p=trio" class="card card-dark" style="text-decoration: none;">
+                        <div class="badge-discount pulse-badge">-50%</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=400&h=300&fit=crop" alt="Trío Amigos"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Trío Amigos</h3>
+                            <p class="card-desc">3 Burgers + Papas Grandes + 3 Bebidas.</p>
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="old-price">S/ 88.00</span>
+                                    <span class="new-price">S/ 43.90</span>
+                                </div>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN HAMBURGUESAS (Fondo Claro) -->
+        <section id="hamburguesas" class="section section-light fade-section">
+            <div class="container">
+                <h2 class="section-title">Hamburguesas 🍔</h2>
+                
+                <div class="grid">
+                    <a href="detalle.html?p=clasica" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="badge tag-popular">Popular</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Clásica Smoke"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Clásica Smoke</h3>
+                            <p class="card-desc">Carne 180g, lechuga, tomate, cebolla, pepinillo, salsa secreta.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 17.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="detalle.html?p=doble" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="badge tag-favorita">Favorita</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=400&h=300&fit=crop" alt="Doble Queso"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Doble Queso</h3>
+                            <p class="card-desc">Doble carne 360g, doble queso fundido, cebolla caramelizada, bacon.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 22.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="detalle.html?p=infernal" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="badge tag-picante">Picante</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1615297928064-24977384d0da?w=400&h=300&fit=crop" alt="La Infernal"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">La Infernal</h3>
+                            <p class="card-desc">Carne 200g, jalapeños frescos, queso pepper jack, salsa picante.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 21.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="detalle.html?p=avocado" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="badge tag-nueva">Nuevo</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1548940740-204726a19be3?w=400&h=300&fit=crop" alt="Avocado Gold"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Avocado Gold</h3>
+                            <p class="card-desc">Carne 180g, palta fresca, queso suizo, tomate cherry, mayonesa de ajo.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 21.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="detalle.html?p=mushroom" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=300&fit=crop" alt="Mushroom Melt"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Mushroom Melt</h3>
+                            <p class="card-desc">Carne 180g, champiñones, queso brie, cebolla morada, rúcula.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 20.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="detalle.html?p=veggie" class="card" style="text-decoration: none; color: inherit;">
+                        <div class="badge tag-veggie">Veggie</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?w=400&h=300&fit=crop" alt="Veggie Power"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Veggie Power</h3>
+                            <p class="card-desc">Medallón de lentejas y quinua, queso feta, palta, espinaca.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 18.90</span>
+                                <span class="btn btn-add">Agregar</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN COMBOS -->
+        <section id="combos" class="section section-gray fade-section">
+            <div class="container">
+                <h2 class="section-title">Combos 🍟</h2>
+                
+                <div class="grid grid-3">
+                    <div class="card">
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&h=300&fit=crop" alt="Combo Clásico"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Combo Clásico</h3>
+                            <p class="card-desc">Clásica Smoke + Papas Medianas + Bebida Regular.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 24.80</span>
+                                <button class="btn btn-add">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card highlight">
+                        <div class="badge tag-popular">Recomendado</div>
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&h=300&fit=crop" alt="Combo Doble Extremo"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Combo Doble Extremo</h3>
+                            <p class="card-desc">Burger Doble Queso + Papas Grandes + Bebida Grande.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 32.80</span>
+                                <button class="btn btn-primary btn-add">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-img"><img src="https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&h=300&fit=crop" alt="Combo Avocado"></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Combo Avocado</h3>
+                            <p class="card-desc">Avocado Gold + Aros de cebolla + Bebida Regular.</p>
+                            <div class="card-footer">
+                                <span class="price">S/ 29.80</span>
+                                <button class="btn btn-add">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN EXTRAS -->
+        <section id="extras" class="section section-light fade-section">
+            <div class="container">
+                <h2 class="section-title">Extras 🥓</h2>
+                <div class="grid">
+                    <a href="detalle.html?p=papas" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=400&h=300&fit=crop" alt="Papas Fritas"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Papas Fritas</h4>
+                            <span class="price-small">S/ 6.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+
+                    <a href="detalle.html?p=nuggets" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1562802378-063ec186a863?w=400&h=300&fit=crop" alt="Nuggets"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Nuggets (6 und)</h4>
+                            <span class="price-small">S/ 12.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+
+                    <a href="detalle.html?p=aros" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&h=300&fit=crop" alt="Aros de Cebolla"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Aros de Cebolla</h4>
+                            <span class="price-small">S/ 10.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+
+                    <a href="detalle.html?p=sundae" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop" alt="Sundae Chocolate"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Sundae Chocolate</h4>
+                            <span class="price-small">S/ 7.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN BEBIDAS -->
+        <section id="bebidas" class="section section-gray fade-section">
+            <div class="container">
+                <h2 class="section-title">Bebidas 🥤</h2>
+                <div class="grid">
+                    <a href="detalle.html?p=gaseosa" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=300&fit=crop" alt="Gaseosa Regular"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Gaseosa Regular</h4>
+                            <span class="price-small">S/ 5.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+                    <a href="detalle.html?p=agua" class="card card-horizontal" style="text-decoration: none; color: inherit;">
+                        <div class="card-img-small"><img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&h=300&fit=crop" alt="Agua Mineral"></div>
+                        <div class="card-info">
+                            <h4 class="card-title-small">Agua Mineral</h4>
+                            <span class="price-small">S/ 4.90</span>
+                        </div>
+                        <span class="btn-icon">+</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col brand-col">
+                <h2 class="footer-logo">🍔 SMOKE & BEEF</h2>
+                <p>La mejor experiencia a la parrilla, directo a tu mesa.</p>
+                <div class="social-links">
+                    <a href="#">FB</a>
+                    <a href="#">IG</a>
+                    <a href="#">TK</a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Ubícanos</h3>
+                <p>📍 Av. La Mar 456, Miraflores<br>Lima, Perú</p>
+                <p>📞 987-654-321</p>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Métodos de Pago</h3>
+                <div class="payment-methods">
+                    <span class="pay-badge yape">Yape</span>
+                    <span class="pay-badge plin">Plin</span>
+                    <span class="pay-badge visa">Visa</span>
+                    <span class="pay-badge mc">Mastercard</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Smoke & Beef. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. Navbar Solid on Scroll
+            const navbar = document.getElementById('navbar');
+            const filterWrapper = document.getElementById('filter-wrapper');
+            const navHeight = navbar.offsetHeight;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+
+                // Sticky filters logic
+                if (window.scrollY > document.querySelector('.hero').offsetHeight - 50) {
+                    filterWrapper.classList.add('sticky');
+                } else {
+                    filterWrapper.classList.remove('sticky');
+                }
+            });
+
+            // 2. Filter Pills Smooth Scroll & Active State
+            const pills = document.querySelectorAll('.filter-pill');
+            const sections = document.querySelectorAll('.section');
+
+            pills.forEach(pill => {
+                pill.addEventListener('click', (e) => {
+                    const targetId = pill.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    
+                    // Calcular offset para evitar que el navbar tape el título
+                    const offsetTop = targetSection.offsetTop - filterWrapper.offsetHeight - navHeight;
+                    
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Update Active Pill on Scroll
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Offset para que cambie un poco antes de llegar a la sección
+                    if (scrollY >= (sectionTop - filterWrapper.offsetHeight - navHeight - 100)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                pills.forEach(pill => {
+                    pill.classList.remove('active');
+                    if (pill.getAttribute('data-target') === current) {
+                        pill.classList.add('active');
+                    }
+                });
+            });
+
+            // 3. Intersection Observer (Fade-in Animations)
+            const faders = document.querySelectorAll('.fade-section');
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const fadeObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            faders.forEach(fader => {
+                fadeObserver.observe(fader);
+            });
+        });
+    </script>
+</body>
+</html>
