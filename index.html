@@ -46,10 +46,11 @@
             z-index: 0;
         }
 
-        #hero-canvas {
-            width: 100%; height: 100%;
-            object-fit: contain;
-            opacity: 0.85; /* Increased opacity for more premium look */
+        #hero-video {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
         }
         
         .hero-impact-wrapper {
@@ -255,7 +256,9 @@
     <!-- Canvas Section -->
     <div class="video-scroll-container" id="video-container">
         <div class="canvas-wrapper">
-            <canvas id="hero-canvas"></canvas>
+            <video id="hero-video" autoplay muted loop playsinline>
+                <source src="video.mp4" type="video/mp4">
+            </video>
             <div class="video-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); pointer-events: none;"></div>
         </div>
         
@@ -620,76 +623,37 @@
                 });
             });
 
-            // --- CANVAS EXPERIENCE ---
-            const canvas = document.getElementById('hero-canvas');
-            const context = canvas.getContext('2d');
-            const frameCount = 160; 
-            const images = [];
-            let loadedCount = 0;
+            // --- VIDEO HERO ---
+            const video = document.getElementById('hero-video');
 
-            for (let i = 1; i <= frameCount; i++) {
-                const img = new Image();
-                const frameNum = i.toString().padStart(4, '0');
-                img.src = `frames/frame_${frameNum}.webp`;
-                img.onload = () => {
-                    loadedCount++;
-                    const percent = Math.round((loadedCount / frameCount) * 100);
-                    document.querySelector('.loader-text').innerText = `Cargando experiencia... ${percent}%`;
-                    document.getElementById('loader-fill').style.width = `${percent}%`;
-                    if (loadedCount === frameCount) {
-                        gsap.to('#loader', {
-                            opacity: 0,
-                            duration: 0.5,
-                            onComplete: () => {
-                                document.getElementById('loader').style.display = 'none';
-                                render(0);
-                                initGSAP();
-                            }
-                        });
-                    }
-                };
-                images.push(img);
-            }
-
-            function render(index) {
-                if (images[index]) {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    const img = images[index];
-                    
-                    const hRatio = canvas.width / img.width;
-                    const vRatio = canvas.height / img.height;
-                    const ratio  = Math.max(hRatio, vRatio);
-                    const centerShift_x = (canvas.width - img.width*ratio) / 2;
-                    const centerShift_y = (canvas.height - img.height*ratio) / 2;  
-                    
-                    context.clearRect(0,0,canvas.width, canvas.height);
-                    context.drawImage(img, 0,0, img.width, img.height,
-                                       centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
-                }
-            }
-
-            window.addEventListener("resize", () => render(0));
-
-            function initGSAP() {
-                // Scroll Canvas Timeline linked to ENTIRE PAGE
-                const obj = { frame: 0 };
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: document.documentElement,
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 0.5
+            // Ocultar loader cuando el video está listo
+            video.addEventListener('canplay', () => {
+                gsap.to('#loader', {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => {
+                        document.getElementById('loader').style.display = 'none';
+                        initGSAP();
                     }
                 });
+            });
 
-                tl.to(obj, {
-                    frame: frameCount - 1,
-                    snap: "frame",
-                    ease: "none",
-                    onUpdate: () => render(obj.frame)
-                }, 0);
+            // Fallback: si tarda más de 3s, ocultar loader igual
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader && loader.style.display !== 'none') {
+                    gsap.to('#loader', {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            loader.style.display = 'none';
+                            initGSAP();
+                        }
+                    });
+                }
+            }, 3000);
 
+            function initGSAP() {
                 // Intro GSAP
                 gsap.utils.toArray('.gsap-reveal').forEach((el, i) => {
                     gsap.fromTo(el, 
