@@ -322,7 +322,9 @@ h1, h2, h3, h4, .logo, .hero-title {
 
 .card-img img {
     width: 100%;
-    height: 120%;  /* imagen más alta que el contenedor para cubrir el espacio del parallax */
+    height: 130%;
+    top: -15%;
+    position: relative;
     object-fit: cover;
     transition: transform 0.4s ease;
     backface-visibility: hidden;
