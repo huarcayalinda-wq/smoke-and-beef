@@ -686,20 +686,13 @@ img.src = `frame_${frameNum}.webp`;
                 context.drawImage(img, 0, 0, img.width, img.height, cx, cy, img.width * ratio, img.height * ratio);
             }
 
-            // Scroll nativo puro — sin GSAP para el canvas
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        // scrollY va de 0 hasta que el hero termina (2x altura de pantalla)
-                        const maxScroll = window.innerHeight * 2;
-                        const progress = Math.min(window.scrollY / maxScroll, 1);
-                        currentFrame = Math.round(progress * (frameCount - 1));
-                        render(currentFrame);
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
+            // Usar el scroll de Lenis directamente para el canvas
+            lenis.on('scroll', ({ scroll }) => {
+                const maxScroll = window.innerHeight * 2;
+                const progress = Math.min(scroll / maxScroll, 1);
+                currentFrame = Math.round(progress * (frameCount - 1));
+                render(currentFrame);
+            });
 
             function initGSAP() {
 
