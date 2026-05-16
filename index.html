@@ -759,6 +759,7 @@
                 parallaxImgs.forEach(img => {
                     gsap.to(img, {
                         yPercent: 15,
+                        force3D: false,
                         ease: "none",
                         scrollTrigger: {
                             trigger: img.parentElement,
