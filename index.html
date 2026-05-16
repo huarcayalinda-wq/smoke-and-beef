@@ -730,11 +730,15 @@
                                 trigger: img.parentElement,
                                 start: "top bottom",
                                 end: "bottom top",
-                                scrub: true
+                                scrub: true,
+                                invalidateOnRefresh: true
                             }
                         }
                     );
                 });
+                
+                // Forzar recalculo después de que todo cargue
+                setTimeout(() => ScrollTrigger.refresh(), 100);
             }
         });
     </script>
