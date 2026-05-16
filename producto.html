@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clásica Smoke | Smoke & Beef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para la página de producto */
+        .product-section {
+            padding: 120px 0 80px 0; /* Padding extra para el navbar */
+            min-height: 80vh;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .product-image-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 4/3;
+            transition: transform 0.5s ease;
+        }
+
+        .product-image-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .product-badge {
+            align-self: flex-start;
+            background: var(--tag-popular);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .product-title {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: var(--text-dark);
+        }
+
+        .product-desc {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .ingredients-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .ingredients-list li::before {
+            content: '🔥';
+            font-size: 1rem;
+        }
+
+        .product-price-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .product-price {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .btn-buy {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 48px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-buy:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 900px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                padding: 24px;
+            }
+            .product-title {
+                font-size: 2.5rem;
+            }
+            .product-price-box {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Fijo (Simplificado) -->
+    <nav class="navbar scrolled" style="background: var(--bg-light); box-shadow: var(--shadow-sm);">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" style="color: var(--primary);">
+                <span class="logo-icon">🍔</span> SMOKE & BEEF
+            </a>
+            <div class="nav-links">
+                <a href="index.html" style="color: var(--text-dark);">Volver al Menú</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="section product-section section-gray">
+            <div class="container">
+                <a href="index.html" class="back-link">
+                    <span>&larr;</span> Volver al menú
+                </a>
+
+                <div class="product-container fade-section visible">
+                    <!-- Imagen Grande -->
+                    <div class="product-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800" alt="Clásica Smoke">
+                    </div>
+
+                    <!-- Información del Producto -->
+                    <div class="product-info">
+                        <div class="product-badge">Top Ventas 🔥</div>
+                        
+                        <h1 class="product-title">Clásica Smoke</h1>
+                        
+                        <p class="product-desc">
+                            Nuestra hamburguesa insignia, preparada a la parrilla con leña de manzano para lograr ese toque ahumado perfecto. Jugosa, clásica y absolutamente deliciosa. No aceptes imitaciones.
+                        </p>
+
+                        <div>
+                            <h3 style="margin-bottom: 16px; font-family: var(--font-heading);">Ingredientes Frescos:</h3>
+                            <ul class="ingredients-list">
+                                <li>Carne Premium (180g)</li>
+                                <li>Pan Artesanal Brioche</li>
+                                <li>Queso Cheddar Derretido</li>
+                                <li>Tomate Orgánico Fresco</li>
+                                <li>Lechuga Crespa Crujiente</li>
+                                <li>Cebolla Blanca Asada</li>
+                                <li>Pepinillos Agridulces</li>
+                                <li>Salsa Smoke Secreta</li>
+                            </ul>
+                        </div>
+
+                        <div class="product-price-box">
+                            <span class="product-price">S/ 17.90</span>
+                            <button class="btn-buy" onclick="alert('¡Excelente elección! La Clásica Smoke ha sido añadida a tu carrito.')">Comprar Ahora</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col brand-col">
+                <h2 class="footer-logo">🍔 SMOKE & BEEF</h2>
+                <p>La mejor experiencia a la parrilla, directo a tu mesa.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Ubícanos</h3>
+                <p>📍 Av. La Mar 456, Miraflores<br>Lima, Perú</p>
+                <p>📞 987-654-321</p>
+            </div>
+            <div class="footer-col">
+                <h3>Métodos de Pago</h3>
+                <div class="payment-methods">
+                    <span class="pay-badge yape">Yape</span>
+                    <span class="pay-badge plin">Plin</span>
+                    <span class="pay-badge visa">Visa</span>
+                    <span class="pay-badge mc">Mastercard</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Smoke & Beef. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
