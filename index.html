@@ -33,7 +33,6 @@
         /* Scroll Canvas Container */
         .video-scroll-container {
             position: relative;
-            height: 100vh;
         }
 
         .canvas-wrapper {
@@ -124,23 +123,6 @@
             z-index: 10;
         }
 
-        /* Canvas visible detrás de todo el contenido */
-        main {
-            background: transparent !important;
-        }
-
-        .section {
-            background: rgba(0, 0, 0, 0.72) !important;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-
-        .section-light, .section-gray, .section-dark {
-            background: rgba(0, 0, 0, 0.72) !important;
-            backdrop-filter: blur(6px) !important;
-            -webkit-backdrop-filter: blur(6px) !important;
-        }
-
         /* Navbar always fixed at top */
         #navbar {
             position: fixed !important;
@@ -173,6 +155,11 @@
         /* Dark Theme & Glassmorphism Overrides */
         body { background: #000 !important; color: #fff !important; text-align: left; }
         .hero, .footer-bottom, .breakdown-container { text-align: left !important; }
+        
+        .section-light, .section-gray, .section-dark {
+            background-color: transparent !important;
+            border: none !important;
+        }
 
         .card, .card-dark, .card-horizontal {
             background: rgba(0, 0, 0, 0.75) !important;
@@ -636,23 +623,14 @@
             // --- CANVAS EXPERIENCE ---
             const canvas = document.getElementById('hero-canvas');
             const context = canvas.getContext('2d');
-            const frameCount = 160;
+            const frameCount = 160; 
             const images = [];
             let loadedCount = 0;
-            let currentFrame = 0;
-            let ticking = false;
-
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            resizeCanvas();
-            window.addEventListener('resize', () => { resizeCanvas(); render(currentFrame); });
 
             for (let i = 1; i <= frameCount; i++) {
                 const img = new Image();
                 const frameNum = i.toString().padStart(4, '0');
-img.src = `frame_${frameNum}.webp`;
+                img.src = `frames/frame_${frameNum}.webp`;
                 img.onload = () => {
                     loadedCount++;
                     const percent = Math.round((loadedCount / frameCount) * 100);
@@ -674,27 +652,43 @@ img.src = `frame_${frameNum}.webp`;
             }
 
             function render(index) {
-                const i = Math.max(0, Math.min(frameCount - 1, Math.round(index)));
-                if (!images[i] || !images[i].complete) return;
-                const img = images[i];
-                const hRatio = canvas.width / img.width;
-                const vRatio = canvas.height / img.height;
-                const ratio = Math.max(hRatio, vRatio);
-                const cx = (canvas.width - img.width * ratio) / 2;
-                const cy = (canvas.height - img.height * ratio) / 2;
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0, img.width, img.height, cx, cy, img.width * ratio, img.height * ratio);
+                if (images[index]) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    const img = images[index];
+                    
+                    const hRatio = canvas.width / img.width;
+                    const vRatio = canvas.height / img.height;
+                    const ratio  = Math.max(hRatio, vRatio);
+                    const centerShift_x = (canvas.width - img.width*ratio) / 2;
+                    const centerShift_y = (canvas.height - img.height*ratio) / 2;  
+                    
+                    context.clearRect(0,0,canvas.width, canvas.height);
+                    context.drawImage(img, 0,0, img.width, img.height,
+                                       centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
+                }
             }
 
-            // Usar el scroll de Lenis directamente para el canvas
-            lenis.on('scroll', ({ scroll }) => {
-                const maxScroll = window.innerHeight * 2;
-                const progress = Math.min(scroll / maxScroll, 1);
-                currentFrame = Math.round(progress * (frameCount - 1));
-                render(currentFrame);
-            });
+            window.addEventListener("resize", () => render(0));
 
             function initGSAP() {
+                // Scroll Canvas Timeline linked to ENTIRE PAGE
+                const obj = { frame: 0 };
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: document.documentElement,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 0.5
+                    }
+                });
+
+                tl.to(obj, {
+                    frame: frameCount - 1,
+                    snap: "frame",
+                    ease: "none",
+                    onUpdate: () => render(obj.frame)
+                }, 0);
 
                 // Intro GSAP
                 gsap.utils.toArray('.gsap-reveal').forEach((el, i) => {
