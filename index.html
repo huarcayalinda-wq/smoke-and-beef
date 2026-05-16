@@ -718,11 +718,11 @@
                     });
                 });
                 
-                // Parallax for cards
+                // Parallax for cards - desactivado para evitar líneas blancas
                 const parallaxImgs = document.querySelectorAll('.card-img img');
                 parallaxImgs.forEach(img => {
                     gsap.to(img, {
-                        yPercent: 15,
+                        yPercent: 0,
                         ease: "none",
                         scrollTrigger: {
                             trigger: img.parentElement,
