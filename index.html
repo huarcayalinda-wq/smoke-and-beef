@@ -630,7 +630,7 @@
             for (let i = 1; i <= frameCount; i++) {
                 const img = new Image();
                 const frameNum = i.toString().padStart(4, '0');
-                img.src = `frames/frame_${frameNum}.webp`;
+                img.src = `frame_${frameNum}.webp`;
                 img.onload = () => {
                     loadedCount++;
                     const percent = Math.round((loadedCount / frameCount) * 100);
@@ -650,6 +650,22 @@
                 };
                 images.push(img);
             }
+
+            // Mostrar pagina despues de 2 segundos sin esperar todos los frames
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader && loader.style.display !== 'none') {
+                    gsap.to('#loader', {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            loader.style.display = 'none';
+                            render(0);
+                            initGSAP();
+                        }
+                    });
+                }
+            }, 2000);
 
             function render(index) {
                 if (images[index]) {
