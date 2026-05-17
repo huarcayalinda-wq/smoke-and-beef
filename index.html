@@ -237,7 +237,7 @@
     <nav class="navbar" id="navbar" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1);">
         <div class="container nav-container" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
             <div style="justify-self: start;">
-                <a href="#" class="logo" style="color: var(--primary);">🍔 SMOKE & BEEF</a>
+                <a href="#" class="logo" style="color: var(--primary);">SMOKE & BEEF</a>
             </div>
             <div class="nav-links" style="display: flex; gap: 24px; justify-content: center;">
                 <a href="#promos" style="color: white; text-decoration: none; font-weight: 600;">Promos</a>
@@ -676,11 +676,10 @@
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                       trigger: "#video-container",
+                        trigger: document.documentElement,
                         start: "top top",
                         end: "bottom bottom",
-                        scrub: 1,
-                        invalidateOnRefresh: true
+                        scrub: 0.5
                     }
                 });
 
