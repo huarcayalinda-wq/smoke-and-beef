@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head> 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smoke & Beef | El Mejor Sabor</title>
@@ -46,10 +46,11 @@
             z-index: 0;
         }
 
-        #hero-canvas {
-            width: 100%; height: 100%;
-            object-fit: contain;
-            opacity: 0.85; /* Increased opacity for more premium look */
+        #hero-video {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
         }
         
         .hero-impact-wrapper {
@@ -237,7 +238,7 @@
     <nav class="navbar" id="navbar" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1);">
         <div class="container nav-container" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
             <div style="justify-self: start;">
-                <a href="#" class="logo" style="color: var(--primary);">SMOKE & BEEF</a>
+                <a href="#" class="logo" style="color: var(--primary);">🍔 SMOKE & BEEF</a>
             </div>
             <div class="nav-links" style="display: flex; gap: 24px; justify-content: center;">
                 <a href="#promos" style="color: white; text-decoration: none; font-weight: 600;">Promos</a>
@@ -255,7 +256,9 @@
     <!-- Canvas Section -->
     <div class="video-scroll-container" id="video-container">
         <div class="canvas-wrapper">
-            <canvas id="hero-canvas"></canvas>
+            <video id="hero-video" autoplay muted loop playsinline>
+                <source src="video.mp4" type="video/mp4">
+            </video>
             <div class="video-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); pointer-events: none;"></div>
         </div>
         
@@ -620,76 +623,21 @@
                 });
             });
 
-            // --- CANVAS EXPERIENCE ---
-            const canvas = document.getElementById('hero-canvas');
-            const context = canvas.getContext('2d');
-            const frameCount = 160; 
-            const images = [];
-            let loadedCount = 0;
+            // --- VIDEO HERO ---
+            const video = document.getElementById('hero-video');
 
-            for (let i = 1; i <= frameCount; i++) {
-                const img = new Image();
-                const frameNum = i.toString().padStart(4, '0');
-                img.src = `frames/frame_${frameNum}.webp`;
-                img.onload = () => {
-                    loadedCount++;
-                    const percent = Math.round((loadedCount / frameCount) * 100);
-                    document.querySelector('.loader-text').innerText = `Cargando experiencia... ${percent}%`;
-                    document.getElementById('loader-fill').style.width = `${percent}%`;
-                    if (loadedCount === frameCount) {
-                        gsap.to('#loader', {
-                            opacity: 0,
-                            duration: 0.5,
-                            onComplete: () => {
-                                document.getElementById('loader').style.display = 'none';
-                                render(0);
-                                initGSAP();
-                            }
-                        });
-                    }
-                };
-                images.push(img);
-            }
-
-            function render(index) {
-                if (images[index]) {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    const img = images[index];
-                    
-                    const hRatio = canvas.width / img.width;
-                    const vRatio = canvas.height / img.height;
-                    const ratio  = Math.max(hRatio, vRatio);
-                    const centerShift_x = (canvas.width - img.width*ratio) / 2;
-                    const centerShift_y = (canvas.height - img.height*ratio) / 2;  
-                    
-                    context.clearRect(0,0,canvas.width, canvas.height);
-                    context.drawImage(img, 0,0, img.width, img.height,
-                                       centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
+            // Ocultar loader inmediatamente
+            gsap.to('#loader', {
+                opacity: 0,
+                duration: 0.8,
+                delay: 0.5,
+                onComplete: () => {
+                    document.getElementById('loader').style.display = 'none';
+                    initGSAP();
                 }
-            }
-
-            window.addEventListener("resize", () => render(0));
+            });
 
             function initGSAP() {
-                // Scroll Canvas Timeline linked to ENTIRE PAGE
-                const obj = { frame: 0 };
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: document.documentElement,
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 0.5
-                    }
-                });
-
-                tl.to(obj, {
-                    frame: frameCount - 1,
-                    snap: "frame",
-                    ease: "none",
-                    onUpdate: () => render(obj.frame)
-                }, 0);
-
                 // Intro GSAP
                 gsap.utils.toArray('.gsap-reveal').forEach((el, i) => {
                     gsap.fromTo(el, 
@@ -757,18 +705,24 @@
                 // Parallax for cards
                 const parallaxImgs = document.querySelectorAll('.card-img img');
                 parallaxImgs.forEach(img => {
-                    gsap.to(img, {
-                        yPercent: 15,
-                        force3D: false,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: img.parentElement,
-                            start: "top bottom",
-                            end: "bottom top",
-                            scrub: true
+                    gsap.fromTo(img,
+                        { yPercent: -15 },
+                        {
+                            yPercent: 15,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: img.parentElement,
+                                start: "top bottom",
+                                end: "bottom top",
+                                scrub: true,
+                                invalidateOnRefresh: true
+                            }
                         }
-                    });
+                    );
                 });
+                
+                // Forzar recalculo después de que todo cargue
+                setTimeout(() => ScrollTrigger.refresh(), 100);
             }
         });
     </script>
