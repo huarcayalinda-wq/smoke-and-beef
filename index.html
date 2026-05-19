@@ -220,6 +220,11 @@
             color: white !important;
         }
 
+        .card-img img {
+            height: 130% !important;
+            margin-top: -15% !important;
+        }
+
         .section-title,
         .card-title,
         .card-desc,
@@ -910,17 +915,19 @@
                 // Parallax for cards
                 const parallaxImgs = document.querySelectorAll('.card-img img');
                 parallaxImgs.forEach(img => {
-                    gsap.to(img, {
-                        yPercent: 15,
-                        force3D: false,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: img.parentElement,
-                            start: "top bottom",
-                            end: "bottom top",
-                            scrub: true
+                    gsap.fromTo(img, 
+                        { yPercent: -15 },
+                        {
+                            yPercent: 15,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: img.parentElement,
+                                start: "top bottom",
+                                end: "bottom top",
+                                scrub: true
+                            }
                         }
-                    });
+                    );
                 });
             }
         });

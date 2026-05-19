@@ -318,7 +318,7 @@ h1, h2, h3, h4, .logo, .hero-title {
     overflow: hidden;
 }
 
-.card-dark .card-img { background: #000; }
+.card-dark .card-img { background: #1f2937; }
 
 .card-img img {
     width: 100%;
@@ -333,7 +333,7 @@ h1, h2, h3, h4, .logo, .hero-title {
     transform: scale(1.05); /* Slight zoom on hover */
 }
 
-.card-dark .card-img { background: #000; }
+.card-dark .card-img { background: #1f2937; }
 
 /* Card Body */
 .card-body {
