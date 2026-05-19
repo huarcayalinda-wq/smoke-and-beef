@@ -618,4 +618,7 @@ h1, h2, h3, h4, .logo, .hero-title {
     .section { padding: 60px 0; }
     .highlight { transform: none; }
     .highlight:hover { transform: translateY(-8px); }
+    .grid, .grid-3, .grid-promos {
+        grid-template-columns: 1fr;
+    }
 }
