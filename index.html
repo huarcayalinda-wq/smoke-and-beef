@@ -857,7 +857,20 @@
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
                 const ratio = Math.max(hRatio, vRatio);
-                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
+                
+                // Paneo horizontal interactivo en pantallas angostas / móviles
+                const maxPan = canvas.width - img.naturalWidth * ratio;
+                let centerShift_x;
+                
+                if (isTouchDevice && maxPan < 0) {
+                    // Panea de izquierda a derecha según el progreso del scroll (0% a 100%)
+                    const progress = index / (frameCount - 1);
+                    centerShift_x = maxPan * progress;
+                } else {
+                    // En computadoras o pantallas anchas se mantiene centrado para ver las 3 al mismo tiempo
+                    centerShift_x = maxPan / 2;
+                }
+                
                 const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
