@@ -856,7 +856,17 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-                const ratio = Math.max(hRatio, vRatio);
+                
+                let ratio = Math.max(hRatio, vRatio);
+                
+                // Si es un dispositivo móvil/táctil en modo vertical (pantalla estrecha)
+                // reducimos el factor de escala para que las hamburguesas no se vean gigantescas
+                if (isTouchDevice && canvas.height > canvas.width) {
+                    // Hacemos que ocupen aproximadamente el 60% de la altura de la pantalla
+                    const mobileRatio = (canvas.height * 0.60) / img.naturalHeight;
+                    // Nos aseguramos de no reducirlo por debajo del ancho de la pantalla (hRatio)
+                    ratio = Math.max(hRatio, mobileRatio);
+                }
                 
                 // Paneo horizontal interactivo en pantallas angostas / móviles
                 const maxPan = canvas.width - img.naturalWidth * ratio;
