@@ -225,6 +225,7 @@
         .card-img img {
             height: 130% !important;
             margin-top: -15% !important;
+            transition: none !important;
         }
 
         .section-title,
@@ -725,13 +726,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
-            // Lenis Setup
+            // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
+            ScrollTrigger.config({ ignoreMobileResize: true });
+
+            // Lenis Setup - Smooth scroll on desktop, native fluid momentum scroll on mobile
             const lenis = new Lenis({
                 duration: 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 smooth: true,
-                smoothTouch: true,
-                touchMultiplier: 2
+                smoothTouch: false,
+                syncTouch: false,
+                touchMultiplier: 1.5
             });
 
             lenis.on('scroll', ScrollTrigger.update);
