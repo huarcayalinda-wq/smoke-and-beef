@@ -74,8 +74,10 @@
             position: fixed;
             top: 0;
             left: 0;
-            height: 100vh;
             width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             background: #000;
             z-index: 0;
@@ -84,7 +86,7 @@
         #hero-canvas {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             opacity: 0.85;
             /* Increased opacity for more premium look */
         }
@@ -768,11 +770,12 @@
             const frameCount = 160;
             const images = [];
             let loadedCount = 0;
+            let currentFrame = 0;
 
             for (let i = 1; i <= frameCount; i++) {
                 const img = new Image();
                 const frameNum = i.toString().padStart(4, '0');
-                img.src = `frames/frame_${frameNum}.webp`;
+                img.src = `frame_${frameNum}.webp`;
                 img.onload = () => {
                     loadedCount++;
                     const percent = Math.round((loadedCount / frameCount) * 100);
@@ -827,7 +830,7 @@
                 }
             }
 
-            window.addEventListener("resize", () => render(0));
+            window.addEventListener("resize", () => render(currentFrame));
 
             function initGSAP() {
                 // Scroll Canvas Timeline linked to ENTIRE PAGE
@@ -845,7 +848,10 @@
                     frame: frameCount - 1,
                     snap: "frame",
                     ease: "none",
-                    onUpdate: () => render(obj.frame)
+                    onUpdate: () => {
+                        currentFrame = Math.round(obj.frame);
+                        render(currentFrame);
+                    }
                 }, 0);
 
                 // Intro GSAP
