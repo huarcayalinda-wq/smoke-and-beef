@@ -225,7 +225,6 @@
         .card-img img {
             height: 130% !important;
             margin-top: -15% !important;
-            transition: none !important;
         }
 
         .section-title,
@@ -726,26 +725,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
-            // Lenis & ScrollTrigger Mobile Optimization Setup
-            const isTouch = ScrollTrigger.isTouch === 1 || window.matchMedia("(pointer: coarse)").matches;
-            let lenis;
+            // Lenis Setup
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+                smoothTouch: true,
+                touchMultiplier: 2
+            });
 
-            if (!isTouch) {
-                // Initialize Lenis only on desktop (non-touch) devices
-                lenis = new Lenis({
-                    duration: 1.2,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    smooth: true
-                });
-
-                lenis.on('scroll', ScrollTrigger.update);
-                gsap.ticker.add((time) => {
-                    lenis.raf(time * 1000);
-                });
-            } else {
-                // Enable scroll normalization on mobile touch devices for smooth canvas scroll reactions
-                ScrollTrigger.normalizeScroll(true);
-            }
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
             gsap.ticker.lagSmoothing(0, 0);
 
             // Sticky Navbar
