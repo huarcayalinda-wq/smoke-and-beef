@@ -332,7 +332,7 @@
             <div style="justify-self: start;">
                 <a href="#" class="logo" style="color: var(--primary);">SMOKE & BEEF</a>
             </div>
-            <div class="nav-links" style="display: flex; gap: 24px; justify-content: center;">
+            <div class="nav-links">
                 <a href="#promos" style="color: white; text-decoration: none; font-weight: 600;">Promos</a>
                 <a href="#combos" style="color: white; text-decoration: none; font-weight: 600;">Combos</a>
                 <a href="#hamburguesas" style="color: white; text-decoration: none; font-weight: 600;">Hamburguesas</a>
@@ -729,21 +729,26 @@
             // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
             ScrollTrigger.config({ ignoreMobileResize: true });
 
-            // Lenis Setup - Smooth scroll on desktop, native fluid momentum scroll on mobile
-            const lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smooth: true,
-                smoothTouch: false,
-                syncTouch: false,
-                touchMultiplier: 1.5
-            });
+            // Check if device is mobile/tablet or touch-capable
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768;
 
-            lenis.on('scroll', ScrollTrigger.update);
-            gsap.ticker.add((time) => {
-                lenis.raf(time * 1000);
-            });
-            gsap.ticker.lagSmoothing(0, 0);
+            if (!isTouchDevice) {
+                // Lenis Setup - Smooth scroll on desktop only
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    smooth: true,
+                    smoothTouch: false,
+                    syncTouch: false,
+                    touchMultiplier: 1.5
+                });
+
+                lenis.on('scroll', ScrollTrigger.update);
+                gsap.ticker.add((time) => {
+                    lenis.raf(time * 1000);
+                });
+                gsap.ticker.lagSmoothing(0, 0);
+            }
 
             // Sticky Navbar
             const navbar = document.getElementById('navbar');
@@ -842,7 +847,7 @@
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                        trigger: "body",
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.5
@@ -940,6 +945,9 @@
                         }
                     );
                 });
+
+                // Force ScrollTrigger to refresh after initialization to ensure accurate positions
+                ScrollTrigger.refresh();
             }
         });
     </script>

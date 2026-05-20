@@ -50,6 +50,7 @@ body {
     color: var(--text-dark);
     font-family: var(--font-body);
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
 /* --- TYPOGRAPHY --- */
@@ -115,6 +116,7 @@ h1, h2, h3, h4, .logo, .hero-title {
 .nav-links {
     display: flex;
     gap: 24px;
+    justify-content: center;
 }
 
 .nav-links a {
@@ -612,7 +614,7 @@ h1, h2, h3, h4, .logo, .hero-title {
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    .nav-links { display: none; } /* Hide links on mobile for simplicity, or use hamburger menu later */
+    .nav-links { display: none !important; } /* Hide links on mobile for simplicity, or use hamburger menu later */
     .hero-title { font-size: 2.5rem; }
     .filter-wrapper { top: 60px; }
     .section { padding: 60px 0; }
