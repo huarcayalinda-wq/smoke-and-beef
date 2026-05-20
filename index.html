@@ -10,7 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=1.0.3">
+    <link rel="stylesheet" href="styles.css?v=1.0.4">
 
     <!-- GSAP & Lenis -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -781,6 +781,7 @@
             const images = [];
             let loadedCount = 0;
             let currentFrame = 0;
+            let gsapInitialized = false;
 
             for (let i = 1; i <= frameCount; i++) {
                 const img = new Image();
@@ -823,26 +824,53 @@
             }, 2000);
 
             function render(index) {
-                if (images[index]) {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    const img = images[index];
+                let img = images[index];
+                if (!img) return;
 
-                    const hRatio = canvas.width / img.width;
-                    const vRatio = canvas.height / img.height;
-                    const ratio = Math.max(hRatio, vRatio);
-                    const centerShift_x = (canvas.width - img.width * ratio) / 2;
-                    const centerShift_y = (canvas.height - img.height * ratio) / 2;
-
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(img, 0, 0, img.width, img.height,
-                        centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+                // Si la imagen no ha cargado completamente o tiene ancho natural 0, buscar la imagen cargada más cercana
+                if (!img.complete || img.naturalWidth === 0) {
+                    let found = false;
+                    // Buscar hacia atrás
+                    for (let i = index - 1; i >= 0; i--) {
+                        if (images[i] && images[i].complete && images[i].naturalWidth > 0) {
+                            img = images[i];
+                            found = true;
+                            break;
+                        }
+                    }
+                    // Si no se encuentra hacia atrás, buscar hacia adelante
+                    if (!found) {
+                        for (let i = index + 1; i < frameCount; i++) {
+                            if (images[i] && images[i].complete && images[i].naturalWidth > 0) {
+                                img = images[i];
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) return; // Ninguna imagen ha cargado todavía
                 }
+
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const hRatio = canvas.width / img.naturalWidth;
+                const vRatio = canvas.height / img.naturalHeight;
+                const ratio = Math.max(hRatio, vRatio);
+                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
+                const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
+                    centerShift_x, centerShift_y, img.naturalWidth * ratio, img.naturalHeight * ratio);
             }
 
             window.addEventListener("resize", () => render(currentFrame));
 
             function initGSAP() {
+                if (gsapInitialized) return;
+                gsapInitialized = true;
+
                 // Scroll Canvas Timeline linked to ENTIRE PAGE
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
