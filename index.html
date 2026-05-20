@@ -862,8 +862,8 @@
                 // Si es un dispositivo móvil/táctil en modo vertical (pantalla estrecha)
                 // reducimos el factor de escala para que las hamburguesas no se vean gigantescas
                 if (isTouchDevice && canvas.height > canvas.width) {
-                    // Hacemos que ocupen aproximadamente el 60% de la altura de la pantalla
-                    const mobileRatio = (canvas.height * 0.60) / img.naturalHeight;
+                    // Hacemos que ocupen aproximadamente el 38% de la altura de la pantalla
+                    const mobileRatio = (canvas.height * 0.38) / img.naturalHeight;
                     // Nos aseguramos de no reducirlo por debajo del ancho de la pantalla (hRatio)
                     ratio = Math.max(hRatio, mobileRatio);
                 }
