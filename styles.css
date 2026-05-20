@@ -615,6 +615,11 @@ h1, h2, h3, h4, .logo, .hero-title {
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     .nav-links { display: none !important; } /* Hide links on mobile for simplicity, or use hamburger menu later */
+    .nav-container {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
     .hero-title { font-size: 2.5rem; }
     .filter-wrapper { top: 60px; }
     .section { padding: 60px 0; }
@@ -622,5 +627,29 @@ h1, h2, h3, h4, .logo, .hero-title {
     .highlight:hover { transform: translateY(-8px); }
     .grid, .grid-3, .grid-promos {
         grid-template-columns: 1fr;
+    }
+
+    /* Stats Overlay Mobile Adjustments */
+    .stats-overlay {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 24px 20px !important;
+        width: 90% !important;
+        max-width: 400px !important;
+        bottom: 24px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    .stat-number {
+        font-size: 3rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .hero-impact-wrapper {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        padding: 100px 20px 40px 20px !important;
     }
 }
