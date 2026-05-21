@@ -68,28 +68,23 @@
         /* Scroll Canvas Container */
         .video-scroll-container {
             position: relative;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
         }
 
         .canvas-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-    z-index: 0;
-}
-@media (min-width: 768px) {
-    .canvas-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100dvw;
-        height: 100dvh;
-        z-index: -1;
-    }
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            background: #000;
+            z-index: 0;
+        }
 
         #hero-canvas {
             width: 100%;
@@ -794,9 +789,15 @@
             for (let i = 1; i <= frameCount; i++) {
                 const img = new Image();
                 const frameNum = i.toString().padStart(4, '0');
-                img.src = `frame_${frameNum}.webp`;
+                img.src = `frames/frame_${frameNum}.webp`;
                 img.onload = () => {
                     loadedCount++;
+                    
+                    // Render the first frame as soon as it loads to prevent any initial black screen
+                    if (i === 1) {
+                        render(0);
+                    }
+                    
                     const percent = Math.round((loadedCount / frameCount) * 100);
                     document.querySelector('.loader-text').innerText = `Cargando experiencia... ${percent}%`;
                     document.getElementById('loader-fill').style.width = `${percent}%`;
@@ -865,28 +866,16 @@
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
                 
-                let ratio;
+                // Para que el canvas ocupe SIEMPRE el 100% de la altura/anchura (sin espacios negros)
+                // usamos Math.max(hRatio, vRatio). Esto hace un "cover" perfecto.
+                const ratio = Math.max(hRatio, vRatio);
                 
-                if (isTouchDevice && canvas.height > canvas.width) {
-                    // En móvil vertical, para que las 3 hamburguesas salgan completas side-by-side
-                    // y con un tamaño perfectamente proporcional, ajustamos el escalado al ancho (hRatio).
-                    ratio = hRatio;
-                } else {
-                    // En escritorio o pantallas anchas cubrimos el canvas
-                    ratio = Math.max(hRatio, vRatio);
-                }
-                
-                // Paneo horizontal interactivo (será 0 si ratio es hRatio, centrándose perfectamente)
                 const maxPan = canvas.width - img.naturalWidth * ratio;
-                let centerShift_x;
+                // Siempre centrado horizontalmente (comportamiento idéntico a object-fit: cover)
+                // Esto mantiene las 3 hamburguesas en el centro en pantallas móviles desde el inicio
+                const centerShift_x = maxPan / 2;
                 
-                if (isTouchDevice && maxPan < 0) {
-                    const progress = index / (frameCount - 1);
-                    centerShift_x = maxPan * progress;
-                } else {
-                    centerShift_x = maxPan / 2;
-                }
-                
+                // Verticalmente siempre cubierto
                 const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -900,14 +889,15 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Scroll Canvas Timeline linked to ENTIRE PAGE
+                // Scroll Canvas Timeline - Pinning the Hero
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: "#video-container",
                         start: "top top",
-                        end: "max",
-                        scrub: 0.5
+                        end: "+=2500", // Distancia de scroll para reproducir la animación
+                        scrub: 0.5,
+                        pin: true      // <--- Mantiene el Hero a pantalla completa
                     }
                 });
 
