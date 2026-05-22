@@ -69,8 +69,7 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            height: 100vh;
-            height: 100dvh;
+            height: 3500px;
         }
 
         .canvas-wrapper {
@@ -307,18 +306,11 @@
             pointer-events: auto;
         }
 
-        /* Scroll Animations - las SECCIONES son visibles, las cards se animan individualmente */
+        /* Scroll Animations */
         .gsap-fade-up,
         .gsap-slide-left,
         .gsap-slide-right,
         .gsap-scale-up {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: none !important;
-        }
-
-        /* Las cards dentro de main empiezan ocultas para que GSAP las anime */
-        main .card {
             opacity: 0;
             visibility: hidden;
         }
@@ -872,12 +864,17 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-
-                // Zoom extra 1.18 para eliminar barras negras en móvil y desktop
-                const ratio = Math.max(hRatio, vRatio) * 1.18;
-
-                // Centrado perfecto horizontal y vertical
-                const centerShift_x = (canvas.width  - img.naturalWidth  * ratio) / 2;
+                
+                // Para que el canvas ocupe SIEMPRE el 100% de la altura/anchura (sin espacios negros)
+                // usamos Math.max(hRatio, vRatio). Esto hace un "cover" perfecto.
+                const ratio = Math.max(hRatio, vRatio);
+                
+                const maxPan = canvas.width - img.naturalWidth * ratio;
+                // Siempre centrado horizontalmente (comportamiento idéntico a object-fit: cover)
+                // Esto mantiene las 3 hamburguesas en el centro en pantallas móviles desde el inicio
+                const centerShift_x = maxPan / 2;
+                
+                // Verticalmente siempre cubierto
                 const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -951,74 +948,30 @@
                     });
                 });
 
-                // Section Grid Animations — cada card se anima individualmente
-                // Las secciones completas primero se hacen visibles
-                document.querySelectorAll('.gsap-slide-left, .gsap-slide-right, .gsap-fade-up, .gsap-scale-up').forEach(section => {
-                    gsap.set(section, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
-                });
+                // Section Grid Animations
+                const sectionsToAnimate = [
+                    { sel: '.gsap-slide-left', x: -100, y: 0, scale: 1 },
+                    { sel: '.gsap-slide-right', x: 100, y: 0, scale: 1 },
+                    { sel: '.gsap-fade-up', x: 0, y: 100, scale: 1 },
+                    { sel: '.gsap-scale-up', x: 0, y: 0, scale: 0.8 }
+                ];
 
-                // Cada card dentro de main aparece con fade+slide al entrar en pantalla
-                document.querySelectorAll('main .card').forEach((card, i) => {
-                    gsap.set(card, { autoAlpha: 0, y: 50 });
-                    gsap.to(card, {
-                        autoAlpha: 1,
-                        y: 0,
-                        duration: 0.7,
-                        ease: "power3.out",
-                        delay: (i % 4) * 0.1,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 92%",
-                            toggleActions: "play none none none"
-                        }
+                sectionsToAnimate.forEach(anim => {
+                    gsap.utils.toArray(anim.sel).forEach(el => {
+                        gsap.set(el, { autoAlpha: 0, x: anim.x, y: anim.y, scale: anim.scale });
+                        gsap.to(el, {
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 85%",
+                            },
+                            autoAlpha: 1,
+                            x: 0,
+                            y: 0,
+                            scale: 1,
+                            duration: 1,
+                            ease: "power3.out"
+                        });
                     });
-                });
-
-                // Títulos de sección entran desde la izquierda
-                document.querySelectorAll('main .section-title').forEach(title => {
-                    gsap.set(title, { autoAlpha: 0, x: -50 });
-                    gsap.to(title, {
-                        autoAlpha: 1,
-                        x: 0,
-                        duration: 0.8,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: title,
-                            start: "top 90%",
-                            toggleActions: "play none none none"
-                        }
-                    });
-                });
-
-                // Cards horizontales (Extras y Bebidas) entran desde la derecha
-                document.querySelectorAll('.card-horizontal').forEach((card, i) => {
-                    gsap.set(card, { autoAlpha: 0, x: 60 });
-                    gsap.to(card, {
-                        autoAlpha: 1,
-                        x: 0,
-                        duration: 0.6,
-                        ease: "power3.out",
-                        delay: (i % 4) * 0.08,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: "top 92%",
-                            toggleActions: "play none none none"
-                        }
-                    });
-                });
-
-                // Footer entra con fade
-                gsap.set('footer', { autoAlpha: 0, y: 30 });
-                gsap.to('footer', {
-                    autoAlpha: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: 'footer',
-                        start: "top 95%",
-                        toggleActions: "play none none none"
-                    }
                 });
 
                 // Parallax for cards
