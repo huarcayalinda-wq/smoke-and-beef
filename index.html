@@ -307,62 +307,25 @@
             pointer-events: auto;
         }
 
-        /* Scroll Animations - ocultos hasta que GSAP los active */
+        /* Scroll Animations - las SECCIONES son visibles, las cards se animan individualmente */
         .gsap-fade-up,
         .gsap-slide-left,
         .gsap-slide-right,
         .gsap-scale-up {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+        }
+
+        /* Las cards dentro de main empiezan ocultas para que GSAP las anime */
+        main .card {
             opacity: 0;
             visibility: hidden;
-        }
-
-        /* Partículas de humo / brasas en todo el fondo */
-        #smoke-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 2;
-            opacity: 0.45;
-        }
-
-        /* Línea decorativa de sección */
-        .section-line {
-            display: inline-block;
-            width: 50px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 2px;
-            margin-bottom: 14px;
-        }
-
-        /* Filter / nav pills */
-        #filter-wrapper {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            position: sticky;
-            top: 65px;
-            z-index: 900;
-        }
-
-        /* Ember trail cursor */
-        .ember {
-            position: fixed;
-            pointer-events: none;
-            border-radius: 50%;
-            background: var(--primary);
-            opacity: 0;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Canvas de partículas de humo/brasas — cubre toda la página -->
-    <canvas id="smoke-canvas"></canvas>
 
     <div id="loader">
         <div class="loader-text">Cargando experiencia... 0%</div>
@@ -435,19 +398,6 @@
         </div>
     </div>
 
-
-    <!-- Pills de navegación sticky -->
-    <div id="filter-wrapper">
-        <div class="container">
-            <div class="filter-scroll">
-                <button class="filter-pill active" onclick="scrollToSection('promos')">🔥 Promos</button>
-                <button class="filter-pill" onclick="scrollToSection('hamburguesas')">🍔 Hamburguesas</button>
-                <button class="filter-pill" onclick="scrollToSection('combos')">🍟 Combos</button>
-                <button class="filter-pill" onclick="scrollToSection('extras')">🥓 Extras</button>
-                <button class="filter-pill" onclick="scrollToSection('bebidas')">🥤 Bebidas</button>
-            </div>
-        </div>
-    </div>
 
     <main>
         <!-- SECCIÓN PROMOS -->
@@ -784,121 +734,42 @@
 
     <!-- Scripts -->
     <script>
-        // ─── SMOKE / EMBER PARTICLE SYSTEM ───────────────────────────────────────
-        (function() {
-            const canvas = document.getElementById('smoke-canvas');
-            const ctx = canvas.getContext('2d');
-            let W, H;
-            const particles = [];
-            const TOTAL = 60;
-
-            function resize() {
-                W = canvas.width = window.innerWidth;
-                H = canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
-
-            class Particle {
-                constructor() { this.reset(true); }
-                reset(init) {
-                    this.x = Math.random() * W;
-                    this.y = init ? Math.random() * H : H + 10;
-                    this.size = Math.random() * 2.5 + 0.5;
-                    this.vy = -(Math.random() * 0.55 + 0.15);
-                    this.vx = (Math.random() - 0.5) * 0.25;
-                    this.opacity = Math.random() * 0.45 + 0.08;
-                    this.wobble = Math.random() * Math.PI * 2;
-                    this.wobbleSpeed = Math.random() * 0.018 + 0.004;
-                    const r = Math.random();
-                    this.color = r < 0.55
-                        ? 'rgba(249,115,22,'
-                        : r < 0.82
-                            ? 'rgba(255,176,32,'
-                            : 'rgba(255,240,200,';
-                }
-                update() {
-                    this.wobble += this.wobbleSpeed;
-                    this.x += this.vx + Math.sin(this.wobble) * 0.35;
-                    this.y += this.vy;
-                    this.opacity -= 0.0006;
-                    if (this.y < -10 || this.opacity <= 0) this.reset(false);
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color + this.opacity + ')';
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < TOTAL; i++) particles.push(new Particle());
-
-            function loop() {
-                ctx.clearRect(0, 0, W, H);
-                particles.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(loop);
-            }
-            loop();
-        })();
-
-        // ─── FILTER PILLS SCROLL ─────────────────────────────────────────────────
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            const navbar = document.getElementById('navbar');
-            const filter = document.getElementById('filter-wrapper');
-            const offset = (navbar ? navbar.offsetHeight : 65) + (filter ? filter.offsetHeight : 50) + 10;
-            const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        // Highlight active pill on scroll
-        window.addEventListener('scroll', () => {
-            const sections = ['promos','hamburguesas','combos','extras','bebidas'];
-            const navbar = document.getElementById('navbar');
-            const filter = document.getElementById('filter-wrapper');
-            const offset = (navbar ? navbar.offsetHeight : 65) + (filter ? filter.offsetHeight : 50) + 20;
-            let current = '';
-            sections.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && window.scrollY >= el.offsetTop - offset - 10) current = id;
-            });
-            if (current) {
-                document.querySelectorAll('.filter-pill').forEach((pill, i) => {
-                    pill.classList.toggle('active', sections[i] === current);
-                });
-            }
-        }, { passive: true });
-
-        // ─── MAIN DOMContentLoaded ───────────────────────────────────────────────
         document.addEventListener("DOMContentLoaded", () => {
 
+            // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
             ScrollTrigger.config({ ignoreMobileResize: true });
 
+            // Check if device is mobile/tablet or touch-capable
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 768;
 
-            let lenis = null;
             if (!isTouchDevice) {
-                lenis = new Lenis({
+                // Lenis Setup - Smooth scroll on desktop only
+                const lenis = new Lenis({
                     duration: 1.2,
                     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                     smooth: true,
                     smoothTouch: false,
                     syncTouch: false,
+                    touchMultiplier: 1.5
                 });
+
                 lenis.on('scroll', ScrollTrigger.update);
-                gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+                gsap.ticker.add((time) => {
+                    lenis.raf(time * 1000);
+                });
                 gsap.ticker.lagSmoothing(0, 0);
             }
 
             // Sticky Navbar
             const navbar = document.getElementById('navbar');
+            const navHeight = navbar.offsetHeight;
             window.addEventListener('scroll', () => {
-                navbar.classList.toggle('scrolled', window.scrollY > 50);
-            }, { passive: true });
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
             // Smooth Scroll for Navbar links
             document.querySelectorAll('#navbar a[href^="#"]').forEach(link => {
@@ -907,14 +778,13 @@
                     const targetId = link.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
                     if (targetSection) {
-                        const offset = navbar.offsetHeight + document.getElementById('filter-wrapper').offsetHeight + 10;
-                        const y = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
+                        const y = targetSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 10;
                         window.scrollTo({ top: y, behavior: 'smooth' });
                     }
                 });
             });
 
-            // ─── CANVAS FRAME ANIMATION ──────────────────────────────────────────
+            // --- CANVAS EXPERIENCE ---
             const canvas = document.getElementById('hero-canvas');
             const context = canvas.getContext('2d');
             const frameCount = 160;
@@ -929,15 +799,19 @@
                 img.src = `frames/frame_${frameNum}.webp`;
                 img.onload = () => {
                     loadedCount++;
-                    if (i === 1) render(0);
+                    
+                    // Render the first frame as soon as it loads to prevent any initial black screen
+                    if (i === 1) {
+                        render(0);
+                    }
+                    
                     const percent = Math.round((loadedCount / frameCount) * 100);
-                    const loaderText = document.querySelector('.loader-text');
-                    const loaderFill = document.getElementById('loader-fill');
-                    if (loaderText) loaderText.innerText = `Cargando experiencia... ${percent}%`;
-                    if (loaderFill) loaderFill.style.width = `${percent}%`;
+                    document.querySelector('.loader-text').innerText = `Cargando experiencia... ${percent}%`;
+                    document.getElementById('loader-fill').style.width = `${percent}%`;
                     if (loadedCount === frameCount) {
                         gsap.to('#loader', {
-                            opacity: 0, duration: 0.5,
+                            opacity: 0,
+                            duration: 0.5,
                             onComplete: () => {
                                 document.getElementById('loader').style.display = 'none';
                                 render(0);
@@ -949,12 +823,13 @@
                 images.push(img);
             }
 
-            // Fallback: show page after 2s regardless
+            // Mostrar pagina despues de 2 segundos sin esperar todos los frames
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 if (loader && loader.style.display !== 'none') {
                     gsap.to('#loader', {
-                        opacity: 0, duration: 0.5,
+                        opacity: 0,
+                        duration: 0.5,
                         onComplete: () => {
                             loader.style.display = 'none';
                             render(0);
@@ -967,48 +842,67 @@
             function render(index) {
                 let img = images[index];
                 if (!img) return;
+
+                // Si la imagen no ha cargado completamente o tiene ancho natural 0, buscar la imagen cargada más cercana
                 if (!img.complete || img.naturalWidth === 0) {
                     let found = false;
+                    // Buscar hacia atrás
                     for (let i = index - 1; i >= 0; i--) {
-                        if (images[i]?.complete && images[i].naturalWidth > 0) { img = images[i]; found = true; break; }
-                    }
-                    if (!found) {
-                        for (let i = index + 1; i < frameCount; i++) {
-                            if (images[i]?.complete && images[i].naturalWidth > 0) { img = images[i]; found = true; break; }
+                        if (images[i] && images[i].complete && images[i].naturalWidth > 0) {
+                            img = images[i];
+                            found = true;
+                            break;
                         }
                     }
-                    if (!found) return;
+                    // Si no se encuentra hacia atrás, buscar hacia adelante
+                    if (!found) {
+                        for (let i = index + 1; i < frameCount; i++) {
+                            if (images[i] && images[i].complete && images[i].naturalWidth > 0) {
+                                img = images[i];
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) return; // Ninguna imagen ha cargado todavía
                 }
+
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-                const ratio = Math.max(hRatio, vRatio);
-                const cx = (canvas.width - img.naturalWidth * ratio) / 2;
-                const cy = (canvas.height - img.naturalHeight * ratio) / 2;
+
+                // Zoom extra 1.18 para eliminar barras negras en móvil y desktop
+                const ratio = Math.max(hRatio, vRatio) * 1.18;
+
+                // Centrado perfecto horizontal y vertical
+                const centerShift_x = (canvas.width  - img.naturalWidth  * ratio) / 2;
+                const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
-                    cx, cy, img.naturalWidth * ratio, img.naturalHeight * ratio);
+                    centerShift_x, centerShift_y, img.naturalWidth * ratio, img.naturalHeight * ratio);
             }
 
             window.addEventListener("resize", () => render(currentFrame));
 
-            // ─── GSAP ANIMATIONS — FULL PAGE ────────────────────────────────────
             function initGSAP() {
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Hero canvas scroll scrub
+                // Scroll Canvas Timeline - Pinning the Hero
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: "#video-container",
                         start: "top top",
-                        end: "+=2500",
+                        end: "+=2500", // Distancia de scroll para reproducir la animación
                         scrub: 0.5,
-                        pin: true,
+                        pin: true      // <--- Mantiene el Hero a pantalla completa
                     }
                 });
+
                 tl.to(obj, {
                     frame: frameCount - 1,
                     snap: "frame",
@@ -1019,22 +913,27 @@
                     }
                 }, 0);
 
-                // Hero text reveal
+                // Intro GSAP
                 gsap.utils.toArray('.gsap-reveal').forEach((el, i) => {
                     gsap.fromTo(el,
                         { autoAlpha: 0, y: 50 },
                         {
-                            autoAlpha: 1, y: 0,
+                            autoAlpha: 1,
+                            y: 0,
                             duration: 1.2,
                             delay: i * 0.2,
                             ease: "power3.out",
-                            scrollTrigger: { trigger: el, start: "top 90%" }
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 90%"
+                            }
                         }
                     );
                 });
 
-                // Stats counters
-                document.querySelectorAll('.stat-number').forEach(counter => {
+                // Stats Counters
+                const counters = document.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
                     const target = parseInt(counter.getAttribute('data-target'));
                     const suffix = counter.getAttribute('data-suffix');
                     gsap.to(counter, {
@@ -1042,61 +941,93 @@
                         duration: 2.5,
                         ease: "power2.out",
                         snap: { innerHTML: 1 },
-                        scrollTrigger: { trigger: counter, start: "top 85%" },
+                        scrollTrigger: {
+                            trigger: counter,
+                            start: "top 85%"
+                        },
                         onUpdate: function () {
                             counter.innerHTML = Math.round(this.targets()[0].innerHTML) + suffix;
                         }
                     });
                 });
 
-                // ── FULL-PAGE SECTION ANIMATIONS ──────────────────────────────
-                // Each card in each grid gets its own staggered fade-up
-                const allCards = document.querySelectorAll('main .card');
-                allCards.forEach((card, i) => {
-                    gsap.set(card, { autoAlpha: 0, y: 60 });
+                // Section Grid Animations — cada card se anima individualmente
+                // Las secciones completas primero se hacen visibles
+                document.querySelectorAll('.gsap-slide-left, .gsap-slide-right, .gsap-fade-up, .gsap-scale-up').forEach(section => {
+                    gsap.set(section, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
+                });
+
+                // Cada card dentro de main aparece con fade+slide al entrar en pantalla
+                document.querySelectorAll('main .card').forEach((card, i) => {
+                    gsap.set(card, { autoAlpha: 0, y: 50 });
                     gsap.to(card, {
-                        autoAlpha: 1, y: 0,
-                        duration: 0.85,
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.7,
                         ease: "power3.out",
+                        delay: (i % 4) * 0.1,
                         scrollTrigger: {
                             trigger: card,
+                            start: "top 92%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+
+                // Títulos de sección entran desde la izquierda
+                document.querySelectorAll('main .section-title').forEach(title => {
+                    gsap.set(title, { autoAlpha: 0, x: -50 });
+                    gsap.to(title, {
+                        autoAlpha: 1,
+                        x: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: title,
                             start: "top 90%",
                             toggleActions: "play none none none"
-                        },
-                        delay: (i % 4) * 0.08  // stagger within each row of 4
+                        }
                     });
                 });
 
-                // Section titles slide in from left
-                document.querySelectorAll('main .section-title').forEach(el => {
-                    gsap.set(el, { autoAlpha: 0, x: -60 });
-                    gsap.to(el, {
-                        autoAlpha: 1, x: 0,
-                        duration: 0.9,
+                // Cards horizontales (Extras y Bebidas) entran desde la derecha
+                document.querySelectorAll('.card-horizontal').forEach((card, i) => {
+                    gsap.set(card, { autoAlpha: 0, x: 60 });
+                    gsap.to(card, {
+                        autoAlpha: 1,
+                        x: 0,
+                        duration: 0.6,
                         ease: "power3.out",
-                        scrollTrigger: { trigger: el, start: "top 88%" }
+                        delay: (i % 4) * 0.08,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 92%",
+                            toggleActions: "play none none none"
+                        }
                     });
                 });
 
-                // Section-level slide/scale for wrapper sections
-                [
-                    { sel: '.gsap-slide-left',  x: -80, y: 0,   scale: 1 },
-                    { sel: '.gsap-slide-right', x: 80,  y: 0,   scale: 1 },
-                    { sel: '.gsap-fade-up',     x: 0,   y: 60,  scale: 1 },
-                    { sel: '.gsap-scale-up',    x: 0,   y: 0,   scale: 0.92 }
-                ].forEach(anim => {
-                    gsap.utils.toArray(anim.sel).forEach(el => {
-                        // Only animate the section wrapper itself, not overriding cards inside
-                        gsap.set(el, { autoAlpha: 1 }); // sections are visible; cards handle their own anim
-                    });
+                // Footer entra con fade
+                gsap.set('footer', { autoAlpha: 0, y: 30 });
+                gsap.to('footer', {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: 'footer',
+                        start: "top 95%",
+                        toggleActions: "play none none none"
+                    }
                 });
 
-                // Parallax on card images
-                document.querySelectorAll('.card-img img').forEach(img => {
-                    gsap.fromTo(img,
-                        { yPercent: -12 },
+                // Parallax for cards
+                const parallaxImgs = document.querySelectorAll('.card-img img');
+                parallaxImgs.forEach(img => {
+                    gsap.fromTo(img, 
+                        { yPercent: -15 },
                         {
-                            yPercent: 12,
+                            yPercent: 15,
                             ease: "none",
                             scrollTrigger: {
                                 trigger: img.parentElement,
@@ -1108,34 +1039,7 @@
                     );
                 });
 
-                // Footer fade-in
-                gsap.fromTo('footer',
-                    { autoAlpha: 0, y: 40 },
-                    {
-                        autoAlpha: 1, y: 0,
-                        duration: 1,
-                        ease: "power2.out",
-                        scrollTrigger: { trigger: 'footer', start: "top 92%" }
-                    }
-                );
-
-                // Horizontal card items (Extras / Bebidas) — slide from right
-                document.querySelectorAll('.card-horizontal').forEach((card, i) => {
-                    gsap.set(card, { autoAlpha: 0, x: 50 });
-                    gsap.to(card, {
-                        autoAlpha: 1, x: 0,
-                        duration: 0.7,
-                        ease: "power3.out",
-                        delay: (i % 4) * 0.1,
-                        scrollTrigger: { trigger: card, start: "top 90%" }
-                    });
-                });
-
-                // Badge discount pulse — re-enable after GSAP touches them
-                document.querySelectorAll('.badge-discount').forEach(b => {
-                    b.style.animation = 'pulse-red 2s infinite';
-                });
-
+                // Force ScrollTrigger to refresh after initialization to ensure accurate positions
                 ScrollTrigger.refresh();
             }
         });
