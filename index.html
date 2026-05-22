@@ -868,12 +868,12 @@
                 
                 // Para que el canvas ocupe SIEMPRE el 100% de la altura/anchura (sin espacios negros)
                 // usamos Math.max(hRatio, vRatio). Esto hace un "cover" perfecto.
-                const ratio = Math.max(hRatio, vRatio);
+                const ratio = Math.max(hRatio, vRatio) * 1.15;
                 
                 const maxPan = canvas.width - img.naturalWidth * ratio;
                 // Siempre centrado horizontalmente (comportamiento idéntico a object-fit: cover)
                 // Esto mantiene las 3 hamburguesas en el centro en pantallas móviles desde el inicio
-                const centerShift_x = maxPan / 2;
+                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
                 
                 // Verticalmente siempre cubierto
                 const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
