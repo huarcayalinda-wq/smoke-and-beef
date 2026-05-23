@@ -69,8 +69,7 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            /* Cubre toda la página para que el canvas de fondo se vea en todas las secciones */
-            height: 800vh;
+            /* La altura se calcula dinámicamente por JS para que coincida exactamente con el contenido */
         }
 
         .canvas-wrapper {
@@ -171,7 +170,6 @@
         main {
             position: relative;
             z-index: 10;
-            margin-top: -700vh; /* sube el contenido para que se superponga al canvas de fondo */
         }
 
         /* --- EXTRAS CANVAS SCROLL --- */
@@ -816,6 +814,25 @@
     <!-- Scripts -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+
+            // Calcular altura exacta del contenido y ajustar el contenedor del canvas
+            function adjustCanvasContainer() {
+                const videoContainer = document.getElementById('video-container');
+                const main = document.querySelector('main');
+                const footer = document.querySelector('footer');
+
+                // Altura total = main + footer
+                const totalContent = main.offsetHeight + footer.offsetHeight;
+
+                // El video-container tiene el hero (100vh) + todo el resto
+                videoContainer.style.height = (window.innerHeight + totalContent) + 'px';
+
+                // main sube para quedar justo después del hero
+                main.style.marginTop = '-' + totalContent + 'px';
+            }
+
+            adjustCanvasContainer();
+            window.addEventListener('resize', adjustCanvasContainer);
 
             // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
             ScrollTrigger.config({ ignoreMobileResize: true });
