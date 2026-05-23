@@ -829,10 +829,17 @@
 
                 // main sube para quedar justo después del hero
                 main.style.marginTop = '-' + totalContent + 'px';
+
+                // Refrescar ScrollTrigger para que recalcule posiciones
+                if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
             }
 
             adjustCanvasContainer();
             window.addEventListener('resize', adjustCanvasContainer);
+            // Recalcular cuando todas las imágenes carguen (pueden cambiar la altura)
+            window.addEventListener('load', () => {
+                setTimeout(adjustCanvasContainer, 300);
+            });
 
             // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
             ScrollTrigger.config({ ignoreMobileResize: true });
