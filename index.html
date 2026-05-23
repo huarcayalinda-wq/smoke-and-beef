@@ -167,6 +167,76 @@
             z-index: 10;
         }
 
+        /* --- EXTRAS CANVAS SCROLL --- */
+        #extras-video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        .extras-canvas-wrapper {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            z-index: 5;
+        }
+        #extras-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .extras-impact-wrapper {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 40px;
+            z-index: 6;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .extras-hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+        }
+
+        /* --- EXTRAS HERO BANNER --- */
+        .extras-hero-banner {
+            position: relative;
+            width: 100%;
+            height: 55vw;
+            max-height: 400px;
+            background: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1400&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            padding: 28px 32px;
+        }
+        .extras-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+        }
+        .extras-hero-title {
+            position: relative;
+            z-index: 2;
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
+        @media (max-width: 768px) {
+            .extras-hero-banner {
+                height: 100vw;
+                max-height: none;
+            }
+        }
+
         /* Navbar always fixed at top */
         #navbar {
             position: fixed !important;
@@ -618,10 +688,17 @@
             </div>
         </section>
 
-        <!-- SECCIÓN EXTRAS -->
+        <!-- SECCIÓN EXTRAS — Canvas scroll igual que el hero -->
+        <div id="extras-video-container">
+            <div class="extras-canvas-wrapper">
+                <canvas id="extras-canvas"></canvas>
+            </div>
+            <div class="extras-impact-wrapper">
+                <h2 class="extras-hero-title">Extras 🥓</h2>
+            </div>
+        </div>
         <section id="extras" class="section section-light gsap-slide-right">
             <div class="container">
-                <h2 class="section-title">Extras 🥓</h2>
                 <div class="grid">
                     <div class="card card-horizontal">
                         <div class="card-img-small"><img
@@ -1051,6 +1128,83 @@
                 });
 
                 // Force ScrollTrigger to refresh after initialization to ensure accurate positions
+                ScrollTrigger.refresh();
+            }
+
+            // ── EXTRAS CANVAS SCROLL ─────────────────────────────────────
+            const extrasCanvas = document.getElementById('extras-canvas');
+            const extrasCtx = extrasCanvas.getContext('2d');
+            const extrasFrameCount = 160;
+            const extrasImages = [];
+            let extrasLoaded = 0;
+            let extrasCurrentFrame = 0;
+
+            function renderExtras(index) {
+                let img = extrasImages[index];
+                if (!img) return;
+                if (!img.complete || img.naturalWidth === 0) {
+                    for (let i = index - 1; i >= 0; i--) {
+                        if (extrasImages[i]?.complete && extrasImages[i].naturalWidth > 0) { img = extrasImages[i]; break; }
+                    }
+                    if (!img.complete || img.naturalWidth === 0) return;
+                }
+                extrasCanvas.width = window.innerWidth;
+                extrasCanvas.height = window.innerHeight;
+
+                const hR = extrasCanvas.width / img.naturalWidth;
+                const vR = extrasCanvas.height / img.naturalHeight;
+                const isMobile = extrasCanvas.width < 768;
+                const ratio = isMobile ? Math.min(hR, vR) : Math.max(hR, vR);
+
+                const sw = img.naturalWidth * ratio;
+                const sh = img.naturalHeight * ratio;
+                const ox = (extrasCanvas.width - sw) / 2;
+                const oy = (extrasCanvas.height - sh) / 2;
+
+                extrasCtx.clearRect(0, 0, extrasCanvas.width, extrasCanvas.height);
+                extrasCtx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, ox, oy, sw, sh);
+            }
+
+            for (let i = 1; i <= extrasFrameCount; i++) {
+                const img = new Image();
+                const num = i.toString().padStart(4, '0');
+                img.src = `frames2/frame_${num}.webp`;
+                img.onload = () => {
+                    extrasLoaded++;
+                    if (i === 1) renderExtras(0);
+                    if (extrasLoaded === extrasFrameCount) initExtrasGSAP();
+                };
+                extrasImages.push(img);
+            }
+
+            // Fallback: init after 3s if frames are slow
+            setTimeout(() => initExtrasGSAP(), 3000);
+
+            let extrasGsapInit = false;
+            function initExtrasGSAP() {
+                if (extrasGsapInit) return;
+                extrasGsapInit = true;
+
+                const obj2 = { frame: 0 };
+                gsap.timeline({
+                    scrollTrigger: {
+                        trigger: "#extras-video-container",
+                        start: "top top",
+                        end: "+=2000",
+                        scrub: 0.5,
+                        pin: true,
+                    }
+                }).to(obj2, {
+                    frame: extrasFrameCount - 1,
+                    snap: "frame",
+                    ease: "none",
+                    onUpdate: () => {
+                        extrasCurrentFrame = Math.round(obj2.frame);
+                        renderExtras(extrasCurrentFrame);
+                    }
+                });
+
+                window.addEventListener("resize", () => renderExtras(extrasCurrentFrame));
                 ScrollTrigger.refresh();
             }
         });
