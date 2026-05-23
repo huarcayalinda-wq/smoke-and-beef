@@ -965,7 +965,7 @@
                 const offsetX = (canvas.width - scaledW) / 2;
                 const offsetY = isMobile
                     ? (canvas.height - scaledH) / 2      // móvil: centrado vertical
-                    : (canvas.height - scaledH) / 2 + scaledH * 0.05; // desktop: bajar 5%
+                    : (canvas.height - scaledH) / 2 + scaledH * 0.15; // desktop: bajar 15%
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
