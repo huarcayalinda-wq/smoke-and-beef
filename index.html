@@ -69,8 +69,8 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            /* Cubre hero + promos + hamburguesas + combos para que el canvas de fondo se vea en todas esas secciones */
-            height: 500vh;
+            /* Cubre toda la página para que el canvas de fondo se vea en todas las secciones */
+            height: 800vh;
         }
 
         .canvas-wrapper {
@@ -84,6 +84,7 @@
             overflow: hidden;
             background: #000;
             z-index: 0;
+            transition: opacity 0.6s ease;
         }
 
         #hero-canvas {
@@ -170,7 +171,7 @@
         main {
             position: relative;
             z-index: 10;
-            margin-top: -400vh; /* sube el contenido para que se superponga al canvas de fondo */
+            margin-top: -700vh; /* sube el contenido para que se superponga al canvas de fondo */
         }
 
         /* --- EXTRAS CANVAS SCROLL --- */
@@ -275,8 +276,11 @@
         }
 
         /* Dark Theme & Glassmorphism Overrides */
-        body {
+        html {
             background: #000 !important;
+        }
+        body {
+            background: transparent !important;
             color: #fff !important;
             text-align: left;
         }
@@ -984,10 +988,10 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Ocultar canvas del hero cuando el usuario llega a la sección de extras
+                // Ocultar canvas del hero cuando el usuario llega al footer
                 const canvasWrapper = document.querySelector('.canvas-wrapper');
                 ScrollTrigger.create({
-                    trigger: '#extras-video-container',
+                    trigger: 'footer',
                     start: 'top bottom',
                     onEnter: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
                     onLeaveBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
