@@ -700,17 +700,9 @@
             </div>
         </section>
 
-        <!-- SECCIÓN EXTRAS — Canvas scroll igual que el hero -->
-        <div id="extras-video-container">
-            <div class="extras-canvas-wrapper">
-                <canvas id="extras-canvas"></canvas>
-            </div>
-            <div class="extras-impact-wrapper">
-                <h2 class="extras-hero-title">Extras 🥓</h2>
-            </div>
-        </div>
         <section id="extras" class="section section-light gsap-slide-right">
             <div class="container">
+                <h2 class="section-title">Extras 🥓</h2>
                 <div class="grid">
                     <div class="card card-horizontal">
                         <div class="card-img-small"><img
@@ -1152,82 +1144,6 @@
                 ScrollTrigger.refresh();
             }
 
-            // ── EXTRAS CANVAS SCROLL ─────────────────────────────────────
-            const extrasCanvas = document.getElementById('extras-canvas');
-            const extrasCtx = extrasCanvas.getContext('2d');
-            const extrasFrameCount = 160;
-            const extrasImages = [];
-            let extrasLoaded = 0;
-            let extrasCurrentFrame = 0;
-
-            function renderExtras(index) {
-                let img = extrasImages[index];
-                if (!img) return;
-                if (!img.complete || img.naturalWidth === 0) {
-                    for (let i = index - 1; i >= 0; i--) {
-                        if (extrasImages[i]?.complete && extrasImages[i].naturalWidth > 0) { img = extrasImages[i]; break; }
-                    }
-                    if (!img.complete || img.naturalWidth === 0) return;
-                }
-                extrasCanvas.width = window.innerWidth;
-                extrasCanvas.height = window.innerHeight;
-
-                const hR = extrasCanvas.width / img.naturalWidth;
-                const vR = extrasCanvas.height / img.naturalHeight;
-                const isMobile = extrasCanvas.width < 768;
-                const ratio = isMobile ? Math.min(hR, vR) : Math.max(hR, vR);
-
-                const sw = img.naturalWidth * ratio;
-                const sh = img.naturalHeight * ratio;
-                const ox = (extrasCanvas.width - sw) / 2;
-                const oy = (extrasCanvas.height - sh) / 2;
-
-                extrasCtx.clearRect(0, 0, extrasCanvas.width, extrasCanvas.height);
-                extrasCtx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, ox, oy, sw, sh);
-            }
-
-            for (let i = 1; i <= extrasFrameCount; i++) {
-                const img = new Image();
-                const num = i.toString().padStart(4, '0');
-                img.src = `frames2/frame_${num}.webp`;
-                img.onload = () => {
-                    extrasLoaded++;
-                    if (i === 1) renderExtras(0);
-                    if (extrasLoaded === extrasFrameCount) initExtrasGSAP();
-                };
-                extrasImages.push(img);
-            }
-
-            // Fallback: init after 3s if frames are slow
-            setTimeout(() => initExtrasGSAP(), 3000);
-
-            let extrasGsapInit = false;
-            function initExtrasGSAP() {
-                if (extrasGsapInit) return;
-                extrasGsapInit = true;
-
-                const obj2 = { frame: 0 };
-                gsap.timeline({
-                    scrollTrigger: {
-                        trigger: "#extras-video-container",
-                        start: "top top",
-                        end: "+=2500",
-                        scrub: 0.5,
-                        pin: false,
-                    }
-                }).to(obj2, {
-                    frame: extrasFrameCount - 1,
-                    snap: "frame",
-                    ease: "none",
-                    onUpdate: () => {
-                        extrasCurrentFrame = Math.round(obj2.frame);
-                        renderExtras(extrasCurrentFrame);
-                    }
-                });
-
-                window.addEventListener("resize", () => renderExtras(extrasCurrentFrame));
-                ScrollTrigger.refresh();
-            }
         });
     </script>
 </body>
