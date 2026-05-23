@@ -978,6 +978,15 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
+                // Ocultar canvas del hero cuando el usuario pasa del hero
+                const canvasWrapper = document.querySelector('.canvas-wrapper');
+                ScrollTrigger.create({
+                    trigger: '#video-container',
+                    start: 'bottom bottom',
+                    onLeave: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
+                    onEnterBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
+                });
+
                 // Scroll Canvas Timeline - Pinning the Hero
                 // Empieza en frame 40 para que los panes ya estén abajo al cargar
                 const startFrame = 0;
