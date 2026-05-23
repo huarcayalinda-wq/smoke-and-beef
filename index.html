@@ -293,7 +293,23 @@
         .section-gray,
         .section-dark {
             background-color: transparent !important;
+            background: transparent !important;
             border: none !important;
+        }
+
+        footer.footer {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Asegurar transparencia en móvil también */
+        @media (max-width: 768px) {
+            .section-light,
+            .section-gray,
+            .section-dark {
+                background-color: transparent !important;
+                background: transparent !important;
+            }
         }
 
         .card,
