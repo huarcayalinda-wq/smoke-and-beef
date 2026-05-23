@@ -984,7 +984,7 @@
                 const canvasWrapper = document.querySelector('.canvas-wrapper');
                 ScrollTrigger.create({
                     trigger: 'footer',
-                    start: 'top bottom',
+                    start: 'top top',
                     onEnter: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
                     onLeaveBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
                 });
