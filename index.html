@@ -877,9 +877,9 @@
                 const ratio = Math.max(hRatio, vRatio) * 1.18;
 
                 // Centrado perfecto horizontal y vertical
+                // Desplazamos hacia arriba un 8% para mostrar el pan de abajo completo
                 const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
-
-                const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+                const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2 - (img.naturalHeight * ratio * 0.08);
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
@@ -893,7 +893,11 @@
                 gsapInitialized = true;
 
                 // Scroll Canvas Timeline - Pinning the Hero
-                const obj = { frame: 0 };
+                // Empieza en frame 40 para que los panes ya estén abajo al cargar
+                const startFrame = 15;
+                const obj = { frame: startFrame };
+                render(startFrame); // Mostrar frame inicial correcto
+
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: document.documentElement,
