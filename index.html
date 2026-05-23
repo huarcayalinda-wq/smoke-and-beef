@@ -971,19 +971,19 @@
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
 
-                // En móvil hacemos zoom out para ver las 3 hamburguesas
-                // En desktop mantenemos el cover normal
                 const isMobile = canvas.width < 768;
+                // En móvil usamos hRatio para que las 3 hamburguesas se vean completas horizontalmente
+                // En desktop cover normal
                 const ratio = isMobile
-                    ? Math.min(hRatio, vRatio) * 1.0   // móvil: fit completo sin recortar
-                    : Math.max(hRatio, vRatio);          // desktop: cover normal
+                    ? hRatio * 0.95   // móvil: ajusta al ancho con un poco de margen
+                    : Math.max(hRatio, vRatio);
 
                 const scaledW = img.naturalWidth * ratio;
                 const scaledH = img.naturalHeight * ratio;
 
                 const offsetX = (canvas.width - scaledW) / 2;
                 const offsetY = isMobile
-                    ? (canvas.height - scaledH) / 2      // móvil: centrado normal
+                    ? (canvas.height - scaledH) / 2       // móvil: centrado vertical
                     : (canvas.height - scaledH) / 2 + scaledH * 0.12; // desktop: +12% abajo
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
