@@ -69,8 +69,7 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            height: 100vh;
-            height: 100dvh;
+            height: 500vh; /* ocupa toda la página para scroll completo */
         }
 
         .canvas-wrapper {
@@ -974,7 +973,8 @@
                 const canvasWrapper = document.querySelector('.canvas-wrapper');
                 ScrollTrigger.create({
                     trigger: '#video-container',
-                    start: 'bottom bottom',
+                    start: 'top top',
+                    end: 'bottom bottom',
                     onLeave: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
                     onEnterBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
                 });
@@ -987,10 +987,12 @@
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                        trigger: "#video-container",
                         start: "top top",
                         end: "bottom bottom",
-                        scrub: 0.5
+                        scrub: 0.5,
+                        pin: ".canvas-wrapper",
+                        pinSpacing: false
                     }
                 });
 
@@ -1139,4 +1141,3 @@
     </script>
 </body>
 
-</html>
