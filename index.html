@@ -69,8 +69,8 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            height: 100vh;
-            height: 100dvh;
+            /* Cubre hero + promos + hamburguesas + combos para que el canvas de fondo se vea en todas esas secciones */
+            height: 500vh;
         }
 
         .canvas-wrapper {
@@ -161,10 +161,16 @@
 
         /* Elevate Content over fixed Canvas */
         #filter-wrapper,
-        main,
         footer {
             position: relative;
             z-index: 10;
+        }
+
+        /* main se superpone sobre el video-scroll-container */
+        main {
+            position: relative;
+            z-index: 10;
+            margin-top: -400vh; /* sube el contenido para que se superponga al canvas de fondo */
         }
 
         /* --- EXTRAS CANVAS SCROLL --- */
@@ -978,13 +984,13 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Ocultar canvas del hero cuando el usuario pasa del hero
+                // Ocultar canvas del hero cuando el usuario llega a la sección de extras
                 const canvasWrapper = document.querySelector('.canvas-wrapper');
                 ScrollTrigger.create({
-                    trigger: '#video-container',
-                    start: 'bottom bottom',
-                    onLeave: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
-                    onEnterBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
+                    trigger: '#extras-video-container',
+                    start: 'top bottom',
+                    onEnter: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
+                    onLeaveBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
                 });
 
                 // Scroll Canvas Timeline - Pinning the Hero
@@ -995,7 +1001,7 @@
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                        trigger: "#video-container",
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.5
