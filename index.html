@@ -100,8 +100,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-end;
-            padding-bottom: 60px;
+            justify-content: center;
             z-index: 10;
             text-align: center;
             background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
@@ -276,8 +275,7 @@
             color: white !important;
         }
 
-        .video-scroll-container,
-        .hero-impact-wrapper {
+        .video-scroll-container {
             margin: 0 !important;
             padding: 0 !important;
             border: none !important;
@@ -873,16 +871,26 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
+<<<<<<< HEAD
+                
+                // Para que el canvas ocupe SIEMPRE el 100% de la altura/anchura (sin espacios negros)
+                // usamos Math.max(hRatio, vRatio). Esto hace un "cover" perfecto.
+                const ratio = Math.max(hRatio, vRatio) * 1.15;
+                
+                const maxPan = canvas.width - img.naturalWidth * ratio;
+                // Siempre centrado horizontalmente (comportamiento idéntico a object-fit: cover)
+                // Esto mantiene las 3 hamburguesas en el centro en pantallas móviles desde el inicio
+                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
+                
+                // Verticalmente siempre cubierto
+=======
 
-                // En móvil usar hRatio para ver las 3 hamburguesas completas
-                const isMobile = canvas.width < 768;
-                const ratio = isMobile 
-                    ? hRatio  // en móvil ajusta al ancho para ver las 3
-                    : Math.max(hRatio, vRatio) * 1.18; // en desktop cover normal
+                // Zoom extra 1.18 para eliminar barras negras en móvil y desktop
+                const ratio = Math.max(hRatio, vRatio) * 1.18;
 
                 // Centrado perfecto horizontal y vertical
-                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
-
+                const centerShift_x = (canvas.width  - img.naturalWidth  * ratio) / 2;
+>>>>>>> 74eb98169015c4a640f7bcd2ae3e3f23f9e2adc7
                 const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -900,10 +908,11 @@
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: document.documentElement,
+                        trigger: "#video-container",
                         start: "top top",
-                        end: "bottom bottom",
-                        scrub: 0.5
+                        end: "+=2500", // Distancia de scroll para reproducir la animación
+                        scrub: 0.5,
+                        pin: true      // <--- Mantiene el Hero a pantalla completa
                     }
                 });
 
