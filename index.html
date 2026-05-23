@@ -69,7 +69,16 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            /* La altura se calcula dinámicamente por JS para que coincida exactamente con el contenido */
+            pointer-events: none; /* nunca bloquea clicks */
+        }
+
+        /* En móvil el hero ocupa solo la pantalla visible */
+        @media (max-width: 768px) {
+            .video-scroll-container {
+                height: 100vh !important;
+                height: 100dvh !important;
+                margin-bottom: 0 !important;
+            }
         }
 
         .canvas-wrapper {
@@ -170,6 +179,12 @@
         main {
             position: relative;
             z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin-top: 0 !important;
+            }
         }
 
         /* --- EXTRAS CANVAS SCROLL --- */
@@ -274,13 +289,19 @@
         }
 
         /* Dark Theme & Glassmorphism Overrides */
-        html {
+        html, body {
             background: #000 !important;
-        }
-        body {
-            background: transparent !important;
             color: #fff !important;
             text-align: left;
+        }
+
+        /* Fondo negro de respaldo por si el canvas no carga */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: -1;
         }
 
         .hero,
