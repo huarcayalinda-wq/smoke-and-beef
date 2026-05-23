@@ -1004,14 +1004,7 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Ocultar canvas del hero cuando el usuario llega al footer
-                const canvasWrapper = document.querySelector('.canvas-wrapper');
-                ScrollTrigger.create({
-                    trigger: 'footer',
-                    start: 'top top',
-                    onEnter: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
-                    onLeaveBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
-                });
+                // El canvas se mantiene visible en toda la página
 
                 // Scroll Canvas Timeline - Pinning the Hero
                 // Empieza en frame 40 para que los panes ya estén abajo al cargar
@@ -1021,7 +1014,7 @@
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: "#video-container",
+                        trigger: document.documentElement,
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.5
