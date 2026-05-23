@@ -821,24 +821,23 @@
                 const main = document.querySelector('main');
                 const footer = document.querySelector('footer');
 
-                // Altura total = main + footer
                 const totalContent = main.offsetHeight + footer.offsetHeight;
-
-                // El video-container tiene el hero (100vh) + todo el resto
                 videoContainer.style.height = (window.innerHeight + totalContent) + 'px';
-
-                // main sube para quedar justo después del hero
                 main.style.marginTop = '-' + totalContent + 'px';
 
-                // Refrescar ScrollTrigger para que recalcule posiciones
                 if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
             }
 
             adjustCanvasContainer();
             window.addEventListener('resize', adjustCanvasContainer);
-            // Recalcular cuando todas las imágenes carguen (pueden cambiar la altura)
+
+            // Recalcular múltiples veces para asegurar que las imágenes ya cargaron
+            setTimeout(adjustCanvasContainer, 500);
+            setTimeout(adjustCanvasContainer, 1500);
+            setTimeout(adjustCanvasContainer, 3000);
             window.addEventListener('load', () => {
                 setTimeout(adjustCanvasContainer, 300);
+                setTimeout(adjustCanvasContainer, 1000);
             });
 
             // Prevent ScrollTrigger from constantly recalculating/refreshing on mobile address bar hide/show
