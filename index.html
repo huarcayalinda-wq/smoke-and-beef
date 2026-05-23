@@ -872,14 +872,21 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-                const ratio = Math.max(hRatio, vRatio);
+
+                // En móvil hacemos zoom out para ver las 3 hamburguesas
+                // En desktop mantenemos el cover normal
+                const isMobile = canvas.width < 768;
+                const ratio = isMobile
+                    ? Math.min(hRatio, vRatio) * 1.0   // móvil: fit completo sin recortar
+                    : Math.max(hRatio, vRatio);          // desktop: cover normal
 
                 const scaledW = img.naturalWidth * ratio;
                 const scaledH = img.naturalHeight * ratio;
 
                 const offsetX = (canvas.width - scaledW) / 2;
-                // +12% baja la imagen para mostrar el pan de arriba
-                const offsetY = (canvas.height - scaledH) / 2 + scaledH * 0.12;
+                const offsetY = isMobile
+                    ? (canvas.height - scaledH) / 2      // móvil: centrado normal
+                    : (canvas.height - scaledH) / 2 + scaledH * 0.12; // desktop: +12% abajo
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
