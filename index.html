@@ -870,11 +870,10 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
 
+                // Ajuste por altura para que los panes nunca se corten
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-
-                // Zoom para eliminar barras negras en móvil y desktop
-                const ratio = Math.max(hRatio, vRatio) * 1.0;
+                const ratio = vRatio; // fit por altura, no por ancho
 
                 // Centrado perfecto horizontal y vertical
                 // Desplazamos hacia arriba un 8% para mostrar el pan de abajo completo
