@@ -873,8 +873,11 @@
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
 
-                // Zoom para eliminar barras negras en móvil y desktop
-                const ratio = Math.max(hRatio, vRatio) * 1.18;
+                // En móvil usar hRatio para ver las 3 hamburguesas completas
+                const isMobile = canvas.width < 768;
+                const ratio = isMobile 
+                    ? hRatio  // en móvil ajusta al ancho para ver las 3
+                    : Math.max(hRatio, vRatio) * 1.18; // en desktop cover normal
 
                 // Centrado perfecto horizontal y vertical
                 const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
