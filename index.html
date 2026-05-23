@@ -94,7 +94,10 @@
         }
 
         .hero-impact-wrapper {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -103,6 +106,8 @@
             z-index: 10;
             text-align: center;
             background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
+            pointer-events: none;
+            transition: opacity 0.5s;
         }
 
         .hero-impact-title {
@@ -971,12 +976,19 @@
 
                 // Ocultar canvas del hero cuando el usuario pasa del hero
                 const canvasWrapper = document.querySelector('.canvas-wrapper');
+                const heroWrapper = document.querySelector('.hero-impact-wrapper');
                 ScrollTrigger.create({
                     trigger: '#video-container',
                     start: 'top top',
                     end: 'bottom bottom',
-                    onLeave: () => { canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none'; },
-                    onEnterBack: () => { canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto'; }
+                    onLeave: () => { 
+                        canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none';
+                        heroWrapper.style.opacity = '0';
+                    },
+                    onEnterBack: () => { 
+                        canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto';
+                        heroWrapper.style.opacity = '1';
+                    }
                 });
 
                 // Scroll Canvas Timeline - Pinning the Hero
@@ -1141,3 +1153,4 @@
     </script>
 </body>
 
+</html
