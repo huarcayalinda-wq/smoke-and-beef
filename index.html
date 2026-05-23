@@ -872,16 +872,18 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-                const ratio = Math.max(hRatio, vRatio) * 0.85;
+                const ratio = Math.max(hRatio, vRatio);
 
-                // Centrado perfecto horizontal y vertical
-                // Desplazamos hacia arriba un 8% para mostrar el pan de abajo completo
-                const centerShift_x = (canvas.width - img.naturalWidth * ratio) / 2;
-                const centerShift_y = (canvas.height - img.naturalHeight * ratio) / 2;
+                const scaledW = img.naturalWidth * ratio;
+                const scaledH = img.naturalHeight * ratio;
+
+                const offsetX = (canvas.width - scaledW) / 2;
+                // +12% baja la imagen para mostrar el pan de arriba
+                const offsetY = (canvas.height - scaledH) / 2 + scaledH * 0.12;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
-                    centerShift_x, centerShift_y, img.naturalWidth * ratio, img.naturalHeight * ratio);
+                    offsetX, offsetY, scaledW, scaledH);
             }
 
             window.addEventListener("resize", () => render(currentFrame));
