@@ -896,11 +896,10 @@
                 const obj = { frame: 0 };
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: "#video-container",
+                        trigger: document.documentElement,
                         start: "top top",
-                        end: "+=2500", // Distancia de scroll para reproducir la animación
-                        scrub: 0.5,
-                        pin: true      // <--- Mantiene el Hero a pantalla completa
+                        end: "bottom bottom",
+                        scrub: 0.5
                     }
                 });
 
@@ -1048,4 +1047,3 @@
 </body>
 
 </html>
-
