@@ -1015,7 +1015,7 @@
                     const dstW = srcW * mRatio;
                     const dstH = srcH * mRatio;
                     const dstX = (canvas.width - dstW) / 2;
-                    const dstY = (canvas.height - dstH) / 2;
+                    const dstY = (canvas.height - dstH) / 2 + dstH * 0.08; // móvil: bajar 8%
 
                     context.drawImage(img, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
                 } else {
