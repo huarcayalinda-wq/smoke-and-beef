@@ -978,25 +978,35 @@
 
                 const hRatio = canvas.width / img.naturalWidth;
                 const vRatio = canvas.height / img.naturalHeight;
-
-                // En móvil usamos hRatio para que las 3 hamburguesas llenen toda la pantalla de lado a lado
-                // En desktop mantenemos el cover normal
                 const isMobile = canvas.width < 768;
-                const ratio = isMobile
-                    ? hRatio   // móvil: ancho completo, las 3 hamburguesas se ven enteras
-                    : Math.max(hRatio, vRatio);          // desktop: cover normal
-
-                const scaledW = img.naturalWidth * ratio;
-                const scaledH = img.naturalHeight * ratio;
-
-                const offsetX = (canvas.width - scaledW) / 2;
-                const offsetY = isMobile
-                    ? (canvas.height - scaledH) / 2      // móvil: centrado vertical
-                    : (canvas.height - scaledH) / 2 + scaledH * 0.15; // desktop: bajar 15%
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
-                    offsetX, offsetY, scaledW, scaledH);
+
+                if (isMobile) {
+                    // Móvil: recortar solo la hamburguesa del centro (tercio central)
+                    const srcW = img.naturalWidth / 3;       // ancho de 1 hamburguesa
+                    const srcX = img.naturalWidth / 3;       // empieza en el tercio del medio
+                    const srcH = img.naturalHeight;
+                    const srcY = 0;
+
+                    // Escalar para llenar toda la pantalla
+                    const mRatio = Math.max(canvas.width / srcW, canvas.height / srcH);
+                    const dstW = srcW * mRatio;
+                    const dstH = srcH * mRatio;
+                    const dstX = (canvas.width - dstW) / 2;
+                    const dstY = (canvas.height - dstH) / 2;
+
+                    context.drawImage(img, srcX, srcY, srcW, srcH, dstX, dstY, dstW, dstH);
+                } else {
+                    // Desktop: cover normal con las 3 hamburguesas
+                    const ratio = Math.max(hRatio, vRatio);
+                    const scaledW = img.naturalWidth * ratio;
+                    const scaledH = img.naturalHeight * ratio;
+                    const offsetX = (canvas.width - scaledW) / 2;
+                    const offsetY = (canvas.height - scaledH) / 2 + scaledH * 0.15;
+
+                        offsetX, offsetY, scaledW, scaledH);
+                }
             }
 
             window.addEventListener("resize", () => render(currentFrame));
