@@ -69,7 +69,7 @@
         .video-scroll-container {
             position: relative;
             width: 100%;
-            height: 500vh; /* ocupa toda la página para scroll completo */
+            height: 100vh; /* solo el hero inicial */
         }
 
         .canvas-wrapper {
@@ -77,12 +77,11 @@
             top: 0;
             left: 0;
             width: 100vw;
-            width: 100dvw;
             height: 100vh;
-            height: 100dvh;
             overflow: hidden;
             background: #000;
             z-index: 0;
+            transition: opacity 0.5s;
         }
 
         #hero-canvas {
@@ -168,6 +167,8 @@
         main,
         footer {
             position: relative;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(2px);
             z-index: 10;
         }
 
@@ -974,37 +975,30 @@
                 if (gsapInitialized) return;
                 gsapInitialized = true;
 
-                // Ocultar canvas del hero cuando el usuario pasa del hero
-                const canvasWrapper = document.querySelector('.canvas-wrapper');
+                // El hero-impact-wrapper se desvanece al scrollear
                 const heroWrapper = document.querySelector('.hero-impact-wrapper');
-                ScrollTrigger.create({
-                    trigger: '#video-container',
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    onLeave: () => { 
-                        canvasWrapper.style.opacity = '0'; canvasWrapper.style.pointerEvents = 'none';
-                        heroWrapper.style.opacity = '0';
-                    },
-                    onEnterBack: () => { 
-                        canvasWrapper.style.opacity = '1'; canvasWrapper.style.pointerEvents = 'auto';
-                        heroWrapper.style.opacity = '1';
+                gsap.to(heroWrapper, {
+                    opacity: 0,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: document.documentElement,
+                        start: "top top",
+                        end: "30vh top",
+                        scrub: true
                     }
                 });
 
-                // Scroll Canvas Timeline - Pinning the Hero
-                // Empieza en frame 40 para que los panes ya estén abajo al cargar
+                // Scroll Canvas Timeline — anima toda la página
                 const startFrame = 0;
                 const obj = { frame: startFrame };
-                render(startFrame); // Mostrar frame inicial correcto
+                render(startFrame);
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
-                        trigger: "#video-container",
+                        trigger: document.documentElement,
                         start: "top top",
                         end: "bottom bottom",
                         scrub: 0.5,
-                        pin: ".canvas-wrapper",
-                        pinSpacing: false
                     }
                 });
 
@@ -1153,4 +1147,4 @@
     </script>
 </body>
 
-</html
+</html>
